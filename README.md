@@ -42,3 +42,28 @@ com.Momongt.Momongt_MomentRoute
 ```
 
 ---
+
+# ⚙️ 개발 환경 설정
+
+## 1. 데이터베이스 설정
+
+1. `src/main/resources/application-local.properties.example` 파일을 복사하여 `application-local.properties` 생성
+2. 본인의 DB 접속 정보 입력:
+   ```properties
+   DB_URL=jdbc:mysql://localhost:3306/momongt_db?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   ```
+
+## 2. IntelliJ 실행 설정
+
+- Run/Debug Configurations → Active profiles: `local` 설정
+- 또는 VM options에 `-Dspring.profiles.active=local` 추가
+
+## 3. Swagger UI
+
+- 애플리케이션 실행 후 `http://localhost:8080/swagger-ui.html` 접속
+- API 명세서 확인 및 테스트 가능
+
+---
+
