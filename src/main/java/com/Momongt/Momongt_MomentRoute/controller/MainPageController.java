@@ -16,4 +16,5 @@ public class MainPageController {
     public MainPageResponseDto getMainPageInfo() {
         return mainPageService.getMainPageInfo();
     }
+
 }
