@@ -29,7 +29,7 @@
 
 # 📦 패키지 구조
 ```
-com.Momongt-MomentRoute
+com.Momongt.Momongt_MomentRoute
 │
 ├── config        : 설정 관련 클래스
 ├── exception     : 예외 처리 관련 클래스
