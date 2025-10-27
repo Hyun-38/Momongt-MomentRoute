@@ -1,4 +1,4 @@
-DB_URL=jdbc:mysql://localhost:3306/momongt_db?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
+spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/momongt_db?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true}
+spring.datasource.username=${DB_USERNAME:root}
+spring.datasource.password=${DB_PASSWORD}
 
