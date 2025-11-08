@@ -1,0 +1,21 @@
+# Local IntelliJ execution (without Docker)
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # H2 uses auto DDL
+    show-sql: true
+    defer-datasource-initialization: true
+
+  flyway:
+    enabled: false  # Disable Flyway for H2 in-memory DB
+

@@ -1,0 +1,21 @@
+# Development Docker environment
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://mysql:3306/appdb?serverTimezone=Asia/Seoul&characterEncoding=utf8}
+    username: ${DB_USERNAME:appuser}
+    password: ${DB_PASSWORD:dev-password}
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # TODO: Change to 'validate' after Flyway setup
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # TODO: Enable after Flyway issues resolved
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    validate-on-migrate: true

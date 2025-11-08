@@ -1,0 +1,8 @@
+-- Grant full development permissions to appuser
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, INDEX, CREATE TEMPORARY TABLES ON appdb.* TO 'appuser'@'%';
+FLUSH PRIVILEGES;
+
+CREATE TABLE IF NOT EXISTS appdb.healthcheck (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
