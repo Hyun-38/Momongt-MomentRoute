@@ -40,4 +40,3 @@ application-local.properties
 
 ## Secrets ##
 /secrets/*
-!secrets/.gitkeep
