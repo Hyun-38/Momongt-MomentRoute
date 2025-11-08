@@ -1,0 +1,54 @@
+services:
+  mysql:
+    image: mysql:8.4
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD_FILE: /run/secrets/app_db_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d:ro
+      - ./mysql/initdb:/docker-entrypoint-initdb.d:ro
+    secrets:
+      - mysql_root_password
+      - app_db_password
+    networks: [ internal ]
+    ports:
+      - "127.0.0.1:3306:3306"   # localhost only - external network blocked
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$$(cat /run/secrets/mysql_root_password) || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/appdb?useSSL=true&requireSSL=true&allowPublicKeyRetrieval=false&serverTimezone=Asia/Seoul&characterEncoding=utf8
+      SPRING_DATASOURCE_USERNAME: appuser
+    secrets:
+      - app_db_password
+    networks: [ internal ]
+    ports:
+      - "8080:8080"   # http://localhost:8080
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  mysql_data:
+
+secrets:
+  mysql_root_password:
+    file: ./secrets/mysql_root_password.txt
+  app_db_password:
+    file: ./secrets/app_db_password.txt

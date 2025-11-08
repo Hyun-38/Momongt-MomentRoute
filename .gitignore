@@ -37,3 +37,6 @@ out/
 .vscode/
 # Local configuration
 application-local.properties
+
+## Secrets ##
+/secrets/*

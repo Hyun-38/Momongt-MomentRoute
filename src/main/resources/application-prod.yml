@@ -1,0 +1,22 @@
+# Production Docker environment
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # TODO: Change to 'validate' after Flyway setup is complete
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  # TODO: Enable Flyway after verifying migration scripts work correctly
+  flyway:
+    enabled: false  # Temporarily disabled - will enable after testing
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    validate-on-migrate: true
+    clean-disabled: true
