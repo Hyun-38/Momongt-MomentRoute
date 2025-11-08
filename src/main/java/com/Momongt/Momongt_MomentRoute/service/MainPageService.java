@@ -1,6 +1,6 @@
 package com.Momongt.Momongt_MomentRoute.service;
 
-import com.Momongt.Momongt_MomentRoute.dto.MainPageResponseDto;
+import com.Momongt.Momongt_MomentRoute.dto.MainPageDto;
 import com.Momongt.Momongt_MomentRoute.entity.Event;
 import com.Momongt.Momongt_MomentRoute.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +15,11 @@ public class MainPageService {
 
     private final EventRepository eventRepository;
 
-    public MainPageResponseDto getMainPageInfo() {
+    public MainPageDto getMainPageInfo() {
         List<Event> events = eventRepository.findAll();
 
-        List<MainPageResponseDto.EventInfo> eventInfos = events.stream()
-                .map(e -> new MainPageResponseDto.EventInfo(
+        List<MainPageDto.EventInfo> eventInfos = events.stream()
+                .map(e -> new MainPageDto.EventInfo(
                         e.getTitle(),
                         e.getDescription(),
                         e.getImageUrl(),
@@ -27,7 +27,7 @@ public class MainPageService {
                 ))
                 .collect(Collectors.toList());
 
-        return new MainPageResponseDto(
+        return new MainPageDto(
                 eventInfos,
                 "경기도 여행, AI가 완벽하게 계획해드립니다"
         );

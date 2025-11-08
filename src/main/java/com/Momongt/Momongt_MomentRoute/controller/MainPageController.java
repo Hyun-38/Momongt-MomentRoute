@@ -1,6 +1,6 @@
 package com.Momongt.Momongt_MomentRoute.controller;
 
-import com.Momongt.Momongt_MomentRoute.dto.MainPageResponseDto;
+import com.Momongt.Momongt_MomentRoute.dto.MainPageDto;
 import com.Momongt.Momongt_MomentRoute.service.MainPageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,8 +26,8 @@ public class MainPageController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     @GetMapping("/main")
-    public ResponseEntity<MainPageResponseDto> getMainPage() {
-        MainPageResponseDto response = mainPageService.getMainPageInfo();
+    public ResponseEntity<MainPageDto> getMainPage() {
+        MainPageDto response = mainPageService.getMainPageInfo();
         return ResponseEntity.ok(response);
     }
 }
