@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MainPageResponseDto {
+public class MainPageDto {
 
     private List<EventInfo> eventList;
     private String welcomeMessage;
