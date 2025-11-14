@@ -20,10 +20,15 @@ public class MainPageController {
 
     private final MainPageService mainPageService;
 
-    @Operation(summary = "메인 페이지 조회", description = "이벤트 목록과 환영 메시지를 반환합니다.")
+    @Operation(
+            summary = "메인 페이지 조회",
+            description = "이벤트 목록과 환영 메시지를 반환합니다."
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 조회됨"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "401", description = "인증 실패 (e.g., 토큰 없음)"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 (DB 접속 실패 등)")
     })
     @GetMapping("/mainpage")
     public ResponseEntity<MainPageDto> getMainPage() {
