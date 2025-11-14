@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/main")
 @RequiredArgsConstructor
 @Tag(name = "Main Page", description = "메인 페이지 API")
 public class MainPageController {
@@ -25,7 +25,7 @@ public class MainPageController {
             @ApiResponse(responseCode = "200", description = "성공적으로 조회됨"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping("/main")
+    @GetMapping("/mainpage")
     public ResponseEntity<MainPageDto> getMainPage() {
         MainPageDto response = mainPageService.getMainPageInfo();
         return ResponseEntity.ok(response);
