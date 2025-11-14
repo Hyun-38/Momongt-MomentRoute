@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 public class MainPageService {
 
     private final EventRepository eventRepository;
-
     public MainPageDto getMainPageInfo() {
         List<Event> events = eventRepository.findAll();
 
