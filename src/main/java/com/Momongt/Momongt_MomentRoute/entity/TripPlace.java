@@ -5,13 +5,19 @@ import lombok.*;
 
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class Route {
+public class TripPlace {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT")
-    private String jsonData;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trip_id")
+    private Plan trip;
 
-    private Long userId;
+    private String name;
+    private String type;
+    private Double lat;
+    private Double lng;
+
+    private Integer orderIndex;
 }
