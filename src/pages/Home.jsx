@@ -144,10 +144,10 @@ export default function Home() {
               <h3>경기대학교 졸업전시회</h3>
               <p>2025-10-15 ~ 2025-10-22</p>
             </div>
+
           </div>
         </div>
       </section>
-
       {/* CTA 영역 */}
       <section className={styles.ctaSection}>
         <h2>지금 바로 여행 계획을 시작하세요</h2>
@@ -160,3 +160,4 @@ export default function Home() {
     </div>
   );
 }
+

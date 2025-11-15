@@ -1,0 +1,534 @@
+/* 기본 스타일 초기화 */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: 'Inter', sans-serif; /* 피그마에서 지정된 폰트 */
+    background-color: #F0F9FF;
+    color: #0F172A; /* 기본 텍스트 색상 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    word-break: keep-all;
+}
+
+* {
+    box-sizing: border-box; /* 레이아웃 계산을 쉽게 */
+}
+
+/* 중앙 정렬 컨테이너 */
+.container {
+    max-width: 1024px; /* 본문 콘텐츠 최대 너비 (원본 기준) */
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 24px; /* 좌우 여백 */
+}
+
+/* -------------------------
+   2. 재사용 컴포넌트 (버튼, 뱃지)
+------------------------- */
+
+/* 공용 버튼 스타일 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    line-height: 28px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 파란색 그라데이션 버튼 */
+.btn-primary {
+    background: linear-gradient(90deg, #00A6F4 0%, #155DFC 100%);
+    color: white;
+    font-size: 18px;
+}
+
+.btn-primary svg path {
+    stroke: white;
+}
+
+/* 흰색 버튼 */
+.btn-secondary {
+    background: white;
+    color: #0EA5E9;
+    font-size: 14px;
+}
+
+.btn-secondary svg path {
+    stroke: #0EA5E9;
+}
+
+/* 공용 뱃지 스타일 */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* -------------------------
+   3. 헤더 (main-header)
+------------------------- */
+.main-header {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.6);
+    border-bottom: 1px #BAE6FD solid;
+    backdrop-filter: blur(5px); /* 반투명 배경에 블러 효과 */
+    position: sticky; /* 스크롤 시 상단 고정 */
+    top: 0;
+    z-index: 100;
+}
+
+.main-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #0F172A;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+/* 피그마 로고 아이콘 CSS로 구현 */
+.logo-icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    overflow: hidden;
+}
+.logo-icon-outer {
+    width: 16px;
+    height: 20px;
+    position: absolute;
+    left: 4px;
+    top: 2px;
+    outline: 2px #0EA5E9 solid;
+}
+.logo-icon-inner {
+    width: 6px;
+    height: 6px;
+    position: absolute;
+    left: 9px;
+    top: 7px;
+    outline: 2px #0EA5E9 solid;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #0F172A;
+    transition: background-color 0.2s;
+}
+
+.nav-link svg path {
+    stroke: #0F172A;
+}
+
+/* 활성화된 링크 및 로그인 버튼 */
+.nav-link.active,
+.nav-link.login-btn {
+    background-color: #0EA5E9;
+    color: white;
+}
+
+.nav-link.active svg path,
+.nav-link.login-btn svg path {
+    stroke: white;
+}
+
+/* 호버 효과 (활성화/로그인 제외) */
+.nav-link:not(.active):not(.login-btn):hover {
+    background-color: #e0f2fe; /* 연한 파란색 */
+}
+
+/* -------------------------
+   4. 메인 콘텐츠 (main-content)
+------------------------- */
+.main-content {
+    width: 100%;
+    /* 원본의 그라데이션 배경 */
+    background: linear-gradient(180deg, #F0F9FF 0%, white 100%);
+}
+
+/* -------------------------
+   5. 히어로 섹션 (hero-section)
+------------------------- */
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 64px 24px;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #DFF2FE;
+    border-radius: 9999px; /* 알약 모양 */
+    color: #0EA5E9;
+    font-size: 16px;
+    font-weight: 500; /* 400보다 500이 뱃지에 어울림 */
+}
+
+.hero-badge svg path {
+    stroke: #0EA5E9;
+}
+
+.hero-section h1 {
+    font-size: 48px;
+    font-weight: 400; /* 원본 스타일 유지 */
+    line-height: 1.2;
+    letter-spacing: 0.35px;
+    color: #0F172A;
+    margin: 24px 0 16px;
+}
+
+.hero-section h1 .highlight {
+    color: #0EA5E9;
+}
+
+.hero-subtitle {
+    font-size: 18px;
+    color: #475569;
+    line-height: 1.6;
+    /* max-width: 700px; 원본의 너비 제한 유지 */
+    margin: 0 auto 32px;
+    word-break: keep-all;
+}
+
+.hero-btn {
+    /* 원본의 76px 높이를 패딩으로 조절 */
+    padding: 24px 32px;
+}
+
+
+/* -------------------------
+   6. 기능 소개 섹션 (features-section)
+------------------------- */
+.features-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3단 그리드 */
+    gap: 24px; /* 카드 사이 간격 */
+    padding-bottom: 64px;
+}
+
+.feature-card {
+    background: white;
+    box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.10);
+    border-radius: 16px;
+    outline: 1px #DFF2FE solid;
+    padding: 24px;
+}
+
+.feature-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    background: #DFF2FE;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.feature-icon-wrapper svg path {
+    stroke: #0EA5E9;
+}
+
+.feature-card h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #0F172A;
+    margin: 0 0 8px 0;
+}
+
+.feature-card p {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* -------------------------
+   7. 축제 목록 섹션 (festivals-section)
+------------------------- */
+.festivals-section {
+    background: white;
+    padding: 48px 0;
+    border-bottom: 1px #BAE6FD solid;
+}
+
+.section-header {
+    margin-bottom: 32px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.section-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.section-icon-wrapper.orange-gradient {
+    background: linear-gradient(135deg, #FFB900 0%, #FF6900 100%);
+}
+
+.section-icon-wrapper svg path {
+    stroke: white;
+}
+
+.section-title h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #0F172A;
+    margin: 0;
+}
+
+.recommend-badge {
+    background: linear-gradient(90deg, #FE9A00 0%, #F54900 100%);
+    color: white;
+}
+
+.recommend-badge svg path {
+    stroke: white;
+}
+
+.section-subtitle {
+    font-size: 16px;
+    color: #475569;
+    margin: 0;
+}
+
+.festival-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.festival-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    text-decoration: none;
+    color: white;
+    aspect-ratio: 315 / 256; /* 이미지 비율 유지 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.festival-card:hover {
+    transform: scale(1.03); /* 호버 시 약간 확대 */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.festival-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지가 카드에 꽉 차도록 */
+    position: absolute;
+    filter: blur(2px); /* 살짝 블러 처리 */
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.card-overlay-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* 내용을 하단에 정렬 */
+    height: 100%;
+    padding: 24px;
+    /* 이미지 위에 어두운 그라데이션 오버레이 */
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.70) 0%, rgba(0, 0, 0, 0.20) 50%, rgba(0, 0, 0, 0) 100%);
+}
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap; /* 태그가 많아지면 줄바꿈 */
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.tag {
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 10px;
+}
+/* 태그 색상 정의 */
+.tag-yellow { background: #FEF3C6; color: #973C00; outline: 1px #FFD230 solid; }
+.tag-green  { background: #D0FAE5; color: #006045; outline: 1px #5EE9B5 solid; }
+.tag-red    { background: #FFE4E6; color: #A50036; outline: 1px #FFA1AD solid; }
+.tag-purple { background: #F3E8FF; color: #6E11B0; outline: 1px #DAB2FF solid; }
+.tag-white  { background: rgba(255, 255, 255, 0.2); color: white; outline: 1px rgba(255, 255, 255, 0.4) solid; }
+
+.card-overlay-content h3 {
+    font-size: 20px;
+    font-weight: 400; /* 원본 스타일 유지 */
+    line-height: 28px;
+    margin: 0 0 8px 0;
+    color: white;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column; /* 정보 항목을 세로로 쌓음 */
+    gap: 4px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.info-item svg path {
+    stroke: rgba(255, 255, 255, 0.9);
+}
+
+/* -------------------------
+   8. CTA 섹션 (cta-section)
+------------------------- */
+.cta-section {
+    padding: 64px 24px;
+    background-color: white; /* festivals-section에서 흰색 배경이 끝났으므로 명시 */
+}
+
+.cta-content {
+    background: linear-gradient(90deg, #00A6F4 0%, #155DFC 100%);
+    border-radius: 16px;
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.cta-content h2 {
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 36px;
+    color: white;
+    margin: 0 0 16px 0;
+}
+
+.cta-content p {
+    font-size: 16px;
+    color: #F0F9FF;
+    line-height: 24px;
+    margin: 0 0 32px 0;
+    max-width: 600px;
+}
+
+
+/* -------------------------
+   9. 반응형 (모바일)
+------------------------- */
+@media (max-width: 860px) {
+    /* 기능 소개: 1단으로 변경 */
+    .features-section {
+        grid-template-columns: 1fr;
+    }
+
+    /* 축제 그리드: 1단으로 변경 */
+    .festival-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    /* 컨테이너 좌우 여백 줄이기 */
+    .container {
+        padding: 16px 16px;
+    }
+    
+    /* 헤더: 로고 텍스트 숨기기, 링크 간격 조절 */
+    .logo span {
+        font-size: 15px;
+    }
+    .nav-links {
+        gap: 8px;
+    }
+    .nav-link span {
+        display: none; /* 모바일에선 아이콘만 표시 */
+    }
+    .nav-link {
+        padding: 8px; /* 정사각형 버튼처럼 */
+    }
+    .nav-link.login-btn span {
+        display: inline; /* 로그인은 텍스트 표시 */
+        font-size: 12px;
+    }
+    .nav-link.login-btn {
+        padding: 6px 10px;
+    }
+
+    /* 히어로: 텍스트 크기 조절 */
+    .hero-section h1 {
+        font-size: 36px;
+    }
+    .hero-subtitle {
+        font-size: 16px;
+    }
+
+    /* 축제 그리드: 1단으로 변경 */
+    .festival-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* CTA: 텍스트 크기 조절 */
+    .cta-content h2 {
+        font-size: 24px;
+    }
+    .cta-content p {
+        font-size: 14px;
+    }
+}

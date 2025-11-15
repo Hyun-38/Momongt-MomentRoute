@@ -1,0 +1,105 @@
+/* 1. 모달 배경 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* 반투명 검은색 배경 */
+  /*display: flex;
+  align-items: center;
+  justify-content: center;*/
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+/* 2. 모달 본체 */
+.modal-content {position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001; /* 오버레이보다 위에 있도록 */
+  
+  width: 90%; /* 모바일에서 여백 */
+  max-width: 512px; /* 최대 너비 고정 */
+  background: #F0F9FF; /* 피그마의 하늘색 배경 */
+  border-radius: 12px;
+  outline: 1px solid #BAE6FD;
+  padding: 24px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* 내부 요소들 사이 간격 */
+}
+
+/* 3. 모달 헤더 */
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-icon {
+  display: flex;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0F172A;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 4. 모달 메시지 */
+.modal-message {
+  font-size: 14px;
+  color: #475569;
+  font-weight: 400;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 5. 모달 버튼 영역 */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
+  gap: 8px;
+  margin-top: 8px; /* 메시지와의 간격 */
+}
+
+/* 버튼 공통 스타일 (전역 .btn 상속받는다고 가정) */
+.modal-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  /* 전역 .btn의 호버 효과 덮어쓰기 (필요시) */
+  transform: none; 
+}
+.modal-btn:hover {
+  transform: none;
+  filter: brightness(0.95);
+}
+
+/* 취소 버튼 */
+.btn-cancel {
+  background: #F0F9FF;
+  color: #0F172A;
+  outline: 1px solid #BAE6FD;
+}
+
+/* 확인 버튼 (일반) */
+.btn-confirm {
+  background: #0EA5E9; /* 기본 확인 버튼은 파란색 (예시) */
+  color: white;
+}
+
+/* 확인 버튼 (위험) */
+.btn-danger {
+  background: #EF4444; /* 삭제 버튼 */
+  color: white;
+}
