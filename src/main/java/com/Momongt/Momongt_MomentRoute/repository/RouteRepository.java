@@ -1,4 +1,7 @@
 package com.Momongt.Momongt_MomentRoute.repository;
 
-public interface RouteRepository {
+import com.Momongt.Momongt_MomentRoute.entity.Route;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RouteRepository extends JpaRepository<Route, Long> {
 }
