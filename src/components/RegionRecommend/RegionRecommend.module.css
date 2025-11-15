@@ -1,0 +1,177 @@
+.section {
+  margin-top: 60px;
+  width: 100%;
+  max-width: 88%;
+  padding: 32px;
+  margin: 30px auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.sub {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.boxWrap {
+  display: flex;
+  gap: 24px;
+}
+
+.oneColumn {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ⭐ 2개 이상일 때: 2개씩 정렬되는 grid */
+.gridTwo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+/* 지역 박스 */
+.cityBox {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  border: 1px solid #e6effa;
+}
+
+/* Header */
+.boxHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.headerLeft {
+  display: flex;
+  gap: 10px;
+}
+
+.locIcon {
+  width: 24px;
+}
+
+.headerTitle {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.headerSub {
+  font-size: 13px;
+  color: #555;
+}
+
+.refreshBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #b7d2f7;
+  background: #f4f9ff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #1a6ed8;
+}
+
+.refreshBtn:hover {
+  background: #e7f2ff;
+}
+
+/* Tabs */
+.tabWrap {
+  display: flex;
+  background: #eaf2ff;
+  padding: 4px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.tab {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 8px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #6a7a8a;
+}
+
+.activeTab {
+  background: white;
+  color: #1a6ed8;
+  box-shadow: 0 0 6px rgba(0,0,0,0.06);
+}
+
+/* Cards */
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  display: flex;
+  background: #f7fbff;
+  border-radius: 12px;
+  padding: 12px;
+  gap: 12px;
+  border: 1px solid #dde8f5;
+}
+
+.cardImg {
+  width: 80px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cardInfo {
+  flex: 1;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tag {
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: #e3f0ff;
+  color: #1a6ed8;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  color: #e39b00;
+  font-size: 14px;
+}
+
+.name {
+  margin-top: 6px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.desc {
+  color: #666;
+  font-size: 13px;
+  margin-top: 2px;
+}

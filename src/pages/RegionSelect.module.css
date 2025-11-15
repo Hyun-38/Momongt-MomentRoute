@@ -1,0 +1,78 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #e5f3ff, #ffffff);
+}
+
+.container {
+  max-width: 90%;
+  margin: 0 auto;
+  padding-top: 80px;
+  
+}
+
+.topTextSmall {
+  font-size: 14px;
+  color: #6b6b6b;
+  margin-bottom: 6px;
+}
+
+.topTextLarge {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 50px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.regionBtn {
+  padding: 12px 0;
+  border-radius: 12px;
+  background: white;
+  border: 1px solid #d7e6f7;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.regionBtn:hover {
+    color: black;
+  background: #f2f7ff;
+}
+
+.active {
+  background: linear-gradient(to right, #00A6F4, #155DFC);
+  color: white;
+  font-weight: 600;
+}
+
+/* Next Button */
+.nextBtn {
+  width: 500px;
+  margin: 0 auto;
+  padding: 14px 0;
+  border-radius: 12px;
+  background: #d1d9e3;
+  color: #8d8d8d;
+  border: none;
+  font-size: 16px;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.enabled {
+  background: #5d9dff;
+  color: white;
+  cursor: pointer;
+}
+
+.enabled:hover {
+  background: linear-gradient(to right, #00A6F4, #155DFC);
+}
