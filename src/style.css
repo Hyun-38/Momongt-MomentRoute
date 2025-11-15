@@ -19,7 +19,7 @@ body, html {
 .container {
     max-width: 1024px; /* 본문 콘텐츠 최대 너비 (원본 기준) */
     margin: 0 auto; /* 중앙 정렬 */
-    padding: 0 24px; /* 좌우 여백 */
+    padding: 24px; /* 좌우 여백 */
 }
 
 /* -------------------------

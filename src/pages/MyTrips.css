@@ -1,0 +1,191 @@
+/* --- MyTrips.jsx 전용 스타일 --- */
+
+/* 1. 페이지 레이아웃 */
+.mytrips-container {
+  padding-top: 48px;
+  padding-bottom: 64px;
+}
+
+.mytrips-header {
+  margin-bottom: 32px;
+}
+
+.mytrips-header h1 {
+  font-size: 30px; /* Mypage와 동일하게 */
+  font-weight: 500;
+  margin: 0 0 8px 0;
+  color: #0F172A;
+  line-height: 36px;
+}
+
+.mytrips-header p {
+  font-size: 16px;
+  color: #475569;
+  margin: 0;
+  line-height: 24px;
+}
+
+/* 2. 여행 카드 그리드 */
+.trip-grid {
+  display: grid;
+  /* 한 줄에 3개, 반응형에서는 2개 또는 1개로 변경 (Mypage의 festival-grid와 유사) */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* 3. 여행 카드 스타일 */
+.trip-card {
+  background: white;
+  border-radius: 16px;
+  outline: 1px solid #BAE6FD;
+  display: flex;
+  flex-direction: column; /* 카드 내용을 세로로 쌓음 */
+}
+
+/* 3-1. 카드 헤더 */
+.trip-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+}
+
+.trip-card-info h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #0F172A;
+  margin: 0 0 8px 0;
+}
+
+.trip-card-info span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px; /* 16px가 더 적절해 보임 */
+  color: #475569;
+}
+
+.trash-btn {
+  background: none;
+  border: none;
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.trash-btn:hover {
+  background-color: #f1f5f9; /* 연한 회색 */
+}
+
+/* 3-2. 카드 바디 */
+.trip-card-body {
+  padding: 0 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* 이 부분이 늘어나서 푸터가 항상 하단에 있도록 */
+  flex-grow: 1; 
+}
+
+.trip-card-section {
+  /* 섹션 구분 */
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 400; /* 500 (Medium) 보다 400 (Regular)이 적절 */
+  color: #0F172A;
+  margin: 0 0 8px 0;
+}
+
+.trip-route-tags {
+  display: flex;
+  flex-wrap: wrap; /* 태그가 많으면 줄바꿈 */
+  align-items: center;
+  gap: 8px;
+}
+
+.trip-route-tags .tag {
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 10px;
+  line-height: 16px;
+}
+
+/* 피그마의 흰색 태그 */
+.tag-stop {
+  color: #0F172A;
+  outline: 1px solid #BAE6FD;
+}
+
+/* 피그마의 채워진 태그 */
+.tag-via {
+  color: #0C4A6E;
+  background: #E0F2FE;
+}
+
+.trip-route-tags .arrow {
+  color: #475569;
+  font-size: 12px;
+}
+
+.event-count {
+  font-size: 16px;
+  color: #475569;
+  margin: 0;
+}
+
+/* 3-3. 카드 푸터 */
+.trip-card-footer {
+  padding: 0 24px 24px 24px;
+}
+
+.trip-card-button {
+  /* 전역 .btn 스타일 상속 */
+  background: #F0F9FF;
+  color: #0F172A;
+  border: 1px solid #BAE6FD;
+  width: 100%; /* 버튼을 카드 너비에 꽉 채움 */
+  height: 36px;
+  padding: 8px 16px;
+  font-size: 14px;
+  
+  /* 전역 .btn 호버 효과 덮어쓰기 */
+  box-shadow: none;
+  transform: none;
+}
+
+.trip-card-button:hover {
+  box-shadow: none;
+  transform: none;
+  background: #E0F2FE; /* 호버 시 배경색 변경 */
+}
+
+
+/* 4. 반응형 (style.css와 유사하게) */
+@media (max-width: 860px) {
+  .trip-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .trip-grid {
+    grid-template-columns: 1fr;
+  }
+  .mytrips-header h1 {
+    font-size: 24px;
+  }
+  .mytrips-header p {
+    font-size: 14px;
+  }
+}
