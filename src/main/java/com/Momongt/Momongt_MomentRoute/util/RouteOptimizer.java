@@ -3,7 +3,6 @@ package com.Momongt.Momongt_MomentRoute.util;
 import com.Momongt.Momongt_MomentRoute.entity.City;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class RouteOptimizer {
@@ -31,10 +30,26 @@ public class RouteOptimizer {
 
         if (viaCities.isEmpty()) return List.of(destination);
 
+        // 경유지가 5개 이상이면 휴리스틱 알고리즘 사용 (성능 개선)
+        if (viaCities.size() >= 5) {
+            System.out.println("경유지가 " + viaCities.size() + "개이므로 Nearest Neighbor 알고리즘 사용");
+            return nearestNeighborOptimize(viaCities, destination);
+        } else {
+            System.out.println("경유지가 " + viaCities.size() + "개이므로 Brute Force 알고리즘 사용");
+            return bruteForceOptimize(viaCities, destination);
+        }
+    }
+
+    /**
+     * Brute Force (완전 탐색) - 모든 순열을 탐색하여 최적 경로 찾기
+     * 시간복잡도: O(n!)
+     * 경유지가 적을 때(4개 이하) 사용
+     */
+    private static List<City> bruteForceOptimize(List<City> viaCities, City destination) {
         List<List<City>> perms = permutations(viaCities);
 
         double best = Double.MAX_VALUE;
-        List<City> bestRoute = null;
+        List<City> bestRoute = new ArrayList<>();
 
         for (List<City> perm : perms) {
             double total = 0;
@@ -52,6 +67,43 @@ public class RouteOptimizer {
 
         bestRoute.add(destination);
         return bestRoute;
+    }
+
+    /**
+     * Nearest Neighbor (최근접 이웃) - 휴리스틱 알고리즘
+     * 시간복잡도: O(n²)
+     * 경유지가 많을 때(5개 이상) 사용
+     * 항상 최적은 아니지만 합리적인 경로를 빠르게 찾음
+     */
+    private static List<City> nearestNeighborOptimize(List<City> viaCities, City destination) {
+        List<City> remaining = new ArrayList<>(viaCities);
+        List<City> route = new ArrayList<>();
+
+        // 첫 번째 도시를 임의로 선택 (첫 번째 경유지)
+        City current = remaining.remove(0);
+        route.add(current);
+
+        // 남은 도시들 중 가장 가까운 도시를 계속 선택
+        while (!remaining.isEmpty()) {
+            City nearest = null;
+            double minDistance = Double.MAX_VALUE;
+
+            for (City city : remaining) {
+                double dist = distanceKm(current, city);
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    nearest = city;
+                }
+            }
+
+            route.add(nearest);
+            remaining.remove(nearest);
+            current = nearest;
+        }
+
+        // 마지막에 목적지 추가
+        route.add(destination);
+        return route;
     }
 
     private static List<List<City>> permutations(List<City> list) {
