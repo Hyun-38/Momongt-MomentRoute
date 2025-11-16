@@ -22,7 +22,7 @@ export default function LoginModal({ onClose, onGoSignup, onLoginSuccess }) {
       console.log("📌 로그인 요청:", requestBody);
 
       const res = await axios.post(
-        "http://172.30.1.31:8080/api/member/login",
+        "http://13.124.41.43/api/member/login",
         requestBody,
         {
           headers: {
@@ -46,7 +46,7 @@ export default function LoginModal({ onClose, onGoSignup, onLoginSuccess }) {
       }
 
       onLoginSuccess();
-      
+
       onClose();  // 모달 닫기
 
     } catch (err) {

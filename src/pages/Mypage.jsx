@@ -3,80 +3,110 @@ import Header from "../components/Header/Header.jsx";
 import ToastPopup from '../components/ToastPopup';
 import ConfirmModal from '../components/ConfirmModal';
 import './Mypage.css';
-import api from "../api/axiosInstance";
+import axios from "axios";
 
-// --- 실제 API 함수들 ---
+// ---------------------------------------
+// 1. API ENDPOINT
+// ---------------------------------------
+const BASE_URL = "http://13.124.41.43/api";
 
-/** 1. GET /member/me - 사용자 프로필 불러오기 */
+// ---------------------------------------
+// 2. 실제 API 함수들
+// ---------------------------------------
+
+/** GET /member/me */
 const fetchUserProfile = async () => {
-  const res = await api.get("/member/me");
+  const token = localStorage.getItem("accessToken");
+  const res = await axios.get(`${BASE_URL}/member/me`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
   return res.data;
 };
 
-/** 2. PUT /member/me - 사용자 정보 수정 */
+/** PUT /member/me */
 const updateUserProfile = async (formData) => {
+  const token = localStorage.getItem("accessToken");
+
   const body = {
     email: formData.email,
     name: formData.name,
-    phoneNumber: formData.phone
+    phoneNumber: formData.phone,
   };
 
-  const res = await api.put("/member/me", body);
+  const res = await axios.put(`${BASE_URL}/member/me`, body, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
   return res.data;
 };
 
-/** ⭐ 3. DELETE /member/me - 계정 삭제 */
+/** DELETE /member/me */
 const deleteMember = async () => {
-  const res = await api.delete("/member/me");
+  const token = localStorage.getItem("accessToken");
+
+  const res = await axios.delete(`${BASE_URL}/member/me`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
   return res.data;
 };
 
 
-// --- MyPage 컴포넌트 ---
+// ====================================================================
+// MyPage Component
+// ====================================================================
 
 function MyPage() {
   const [toast, setToast] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 입력용 폼 상태
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
   });
 
-  // 화면 표시용 정보
   const [userProfile, setUserProfile] = useState({
     name: '',
     email: '',
-    joinDate: ''
+    joinDate: '',
   });
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
 
-  // 🚀 페이지 로드 시 API에서 사용자 정보 GET
+  // 날짜 포맷 (YYYY-MM-DD)
+  const formatDate = (isoString) => {
+    if (!isoString) return "";
+    return isoString.split("T")[0];
+  };
+
+
+  // -------------------------------------------------
+  // 🚀 최초 로딩 - GET /member/me 호출
+  // -------------------------------------------------
   useEffect(() => {
     const loadData = async () => {
       try {
         const userData = await fetchUserProfile();
+        console.log("🔥 GET /member/me 응답:", userData);
 
         setFormData({
           name: userData.name,
-          email: userData.email,
-          phone: userData.phoneNumber
+          email: userData.email || "",   // email 없을 시 빈 값 처리
+          phone: userData.phoneNumber,
         });
 
         setUserProfile({
           name: userData.name,
-          email: userData.email,
-          joinDate: userData.createdAt // createdAt 사용
+          email: userData.email || "",
+          joinDate: formatDate(userData.createdAt),
         });
 
       } catch (error) {
         console.error("프로필 로딩 실패:", error);
-        showToast("정보를 불러오는 데 실패했습니다.", "info");
+        setToast({ message: "정보를 불러오는 데 실패했습니다.", type: "info" });
       } finally {
         setIsLoading(false);
       }
@@ -86,22 +116,16 @@ function MyPage() {
   }, []);
 
 
-  // 토스트 띄우기
-  const showToast = (message, type = 'info', subtitle = null) => {
-    setToast({ message, type, subtitle });
-  };
-
-  // 폼 입력 변경 핸들러
+  // 입력 핸들러
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
 
+  // -------------------------------------------------
   // 🚀 PUT /member/me — 프로필 저장
+  // -------------------------------------------------
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
     if (isSaving) return;
@@ -111,56 +135,48 @@ function MyPage() {
     try {
       await updateUserProfile(formData);
 
-      setUserProfile({
+      setUserProfile(prev => ({
+        ...prev,
         name: formData.name,
         email: formData.email,
-        joinDate: userProfile.joinDate // 기존 가입일 유지
-      });
+      }));
 
-      showToast("프로필이 수정되었습니다!", "success");
+      setToast({ message: "프로필이 수정되었습니다!", type: "success" });
 
     } catch (error) {
       console.error("프로필 수정 실패:", error);
-      showToast("프로필 수정 중 오류가 발생했습니다.", "info");
+      setToast({ message: "프로필 수정 중 오류가 발생했습니다.", type: "info" });
     } finally {
       setIsSaving(false);
     }
   };
 
 
-  // 계정 삭제 버튼 클릭
-  const handleDeleteClick = (e) => {
-    e.preventDefault();
-    setIsModalOpen(true);
-  };
-
+  // -------------------------------------------------
   // 🚀 DELETE /member/me — 계정 삭제
+  // -------------------------------------------------
   const handleConfirmDelete = async () => {
     try {
       const res = await deleteMember();
       console.log("계정 삭제 성공:", res);
 
-      // 로그인 정보 완전 제거
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
 
-      setIsModalOpen(false);
-      showToast("계정이 삭제되었습니다.", "success");
+      setToast({ message: "계정이 삭제되었습니다.", type: "success" });
 
-      // 홈으로 이동
       setTimeout(() => {
         window.location.href = "/";
-      }, 800);
+      }, 700);
 
     } catch (error) {
       console.error("계정 삭제 실패:", error);
-      showToast("계정 삭제 중 오류가 발생했습니다.", "info");
+      setToast({ message: "계정 삭제 중 오류가 발생했습니다.", type: "info" });
     }
   };
 
 
-  // 로딩 화면
   if (isLoading) {
     return (
       <main className="main-content">
@@ -172,7 +188,9 @@ function MyPage() {
   }
 
 
-  // --- 렌더링 ---
+  // ====================================================================
+  // 렌더링
+  // ====================================================================
   return (
     <>
       <Header />
@@ -189,6 +207,9 @@ function MyPage() {
 
           <div className="mypage-content">
 
+            {/* ----------------------------------- */}
+            {/* 프로필 카드 */}
+            {/* ----------------------------------- */}
             <section className="mypage-card">
               <header className="mypage-card__header mypage-card__header--with-divider">
                 <h2 className="mypage-card__title">프로필 정보</h2>
@@ -197,7 +218,7 @@ function MyPage() {
 
               <div className="mypage-card__body">
 
-                {/* 아바타 표시 */}
+                {/* 아바타 */}
                 <div className="profile-section">
                   <div className="profile-section__avatar">
                     {userProfile.name ? userProfile.name.charAt(0) : '?' }
@@ -209,8 +230,7 @@ function MyPage() {
                   </div>
                 </div>
 
-
-                {/* 수정 폼 */}
+                {/* 폼 */}
                 <form className="profile-form">
                   <div className="form-group">
                     <label htmlFor="name" className="form-label">이름</label>
@@ -261,7 +281,9 @@ function MyPage() {
             </section>
 
 
+            {/* ----------------------------------- */}
             {/* 비밀번호 변경 */}
+            {/* ----------------------------------- */}
             <section className="mypage-card">
               <header className="mypage-card__header">
                 <h2 className="mypage-card__title">비밀번호 변경</h2>
@@ -273,7 +295,7 @@ function MyPage() {
                 className="btn mypage-card__button mypage-card__button--secondary"
                 onClick={(e) => {
                   e.preventDefault();
-                  showToast("비밀번호 변경 기능은 준비 중입니다.", "info");
+                  setToast({ message: "비밀번호 변경 기능은 준비 중입니다.", type: "info" });
                 }}
               >
                 비밀번호 변경하기
@@ -281,7 +303,9 @@ function MyPage() {
             </section>
 
 
+            {/* ----------------------------------- */}
             {/* 계정 삭제 */}
+            {/* ----------------------------------- */}
             <section className="mypage-card mypage-card--danger-outline">
               <header className="mypage-card__header">
                 <h2 className="mypage-card__title mypage-card__title--danger">계정 삭제</h2>
@@ -293,15 +317,17 @@ function MyPage() {
               <a 
                 href="#"
                 className="btn mypage-card__button mypage-card__button--danger"
-                onClick={handleDeleteClick}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsModalOpen(true);
+                }}
               >
                 계정 삭제
               </a>
             </section>
           </div>
 
-
-          {/* 팝업 / 모달 */}
+          {/* 토스트 */}
           {toast && (
             <ToastPopup
               message={toast.message}
@@ -311,6 +337,7 @@ function MyPage() {
             />
           )}
 
+          {/* 모달 */}
           <ConfirmModal
             isOpen={isModalOpen}
             title="정말 계정을 삭제하시겠습니까?"
