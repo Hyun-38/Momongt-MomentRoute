@@ -16,6 +16,7 @@ public class TravelDto {
     private String endPoint;
     private List<String> waypoints;
     private String aiText;
+    private List<String> preferredCategories;
 
     // ================================
     // ===== 여행 저장 요청 DTO =====

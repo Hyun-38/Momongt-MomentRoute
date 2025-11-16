@@ -1,81 +1,169 @@
 package com.Momongt.Momongt_MomentRoute.service;
 
-import com.Momongt.Momongt_MomentRoute.dto.TravelDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.Momongt.Momongt_MomentRoute.dto.*;
+import com.Momongt.Momongt_MomentRoute.entity.City;
+import com.Momongt.Momongt_MomentRoute.entity.Place;
+import com.Momongt.Momongt_MomentRoute.repository.CityRepository;
+import com.Momongt.Momongt_MomentRoute.repository.PlaceRepository;
+import com.Momongt.Momongt_MomentRoute.util.JsonUtils;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class AiService {
 
-    public TravelDto.RecommendedCourseResponse recommendCourse(TravelDto request) {
+    private final CityRepository cityRepository;
+    private final PlaceRepository placeRepository;
+    private final RestTemplate restTemplate = new RestTemplate();
 
-        // 🔥 AI 문장에서 경유지 자동 추출 (옵션)
-        if (request.getAiText() != null && !request.getAiText().isBlank()) {
-            List<String> extracted = extractWaypoints(request.getAiText());
-            request.setWaypoints(extracted);    // ⭐ 자동 세팅
+    @Value("${openai.api-key}")
+    private String apiKey;
+
+    public RouteResponseDto recommendRoute(RouteRequestDto request) {
+
+        // 1) 요청 도시 순서 정리
+        List<String> ordered = new ArrayList<>();
+        if (request.viaCities() != null) ordered.addAll(request.viaCities());
+        ordered.add(request.destinationCity());
+
+        // 2) DB 조회 → RouteAiPayload 생성
+        List<RouteAiPayload.RouteCityPayload> cityPayloads = new ArrayList<>();
+
+        for (String cityName : ordered) {
+            City city = cityRepository.findByName(cityName)
+                    .orElseThrow(() -> new RuntimeException("City not found: " + cityName));
+
+            List<Place> places = placeRepository.findByCity_Id(city.getId());
+
+            List<RouteAiPayload.RoutePlacePayload> placePayloads =
+                    places.stream()
+                            .map(p -> new RouteAiPayload.RoutePlacePayload(
+                                    p.getId(),
+                                    p.getType().name(),
+                                    p.getCategory(),
+                                    p.getName(),
+                                    p.getDescription(),
+                                    p.getLatitude(),
+                                    p.getLongitude()
+                            )).toList();
+
+            cityPayloads.add(
+                    new RouteAiPayload.RouteCityPayload(city.getId(), city.getName(), placePayloads)
+            );
         }
 
-        // MOCK 데이터 (기존 로직 유지)
-        List<TravelDto.RecommendedCourse> list = new ArrayList<>();
+        RouteAiPayload payload = new RouteAiPayload(
+                new RouteAiPayload.UserPreference(request.preferredCategories()),
+                cityPayloads
+        );
 
-        for (int i = 1; i <= 3; i++) {
-            list.add(new TravelDto.RecommendedCourse(
-                    request.getStartPoint() + " → 추천코스 " + i,
-                    480,
-                    Map.of("polyline", Arrays.asList(1, 2, 3)),
-                    buildRoute(request), // 자동경유지 포함하여 최종 경로 생성
-                    List.of(
-                            new TravelDto.Event("수원 화성 축제", "수원", "2025-10-01", "image-url")
-                    ),
-                    List.of()
-            ));
-        }
+        // 3) GPT 호출
+        RouteAiResultDto gptResult = callGPT(payload);
 
-        return new TravelDto.RecommendedCourseResponse(list);
+        // 4) 프론트용 응답으로 변환
+        List<RouteResponseDto.CityRecommendation> cityRecommendations = gptResult.cityRecommendations().stream()
+                .map(aiCity -> new RouteResponseDto.CityRecommendation(
+                        aiCity.cityName(),
+                        aiCity.foods().stream()
+                                .map(p -> new RouteResponseDto.RecommendedPlace(
+                                        p.placeId(),
+                                        p.name(),
+                                        p.type(),
+                                        p.category(),
+                                        p.description(),
+                                        p.latitude(),
+                                        p.longitude()
+                                )).toList(),
+                        aiCity.attractions().stream()
+                                .map(p -> new RouteResponseDto.RecommendedPlace(
+                                        p.placeId(),
+                                        p.name(),
+                                        p.type(),
+                                        p.category(),
+                                        p.description(),
+                                        p.latitude(),
+                                        p.longitude()
+                                )).toList()
+                )).toList();
+
+        return new RouteResponseDto(
+                cityRecommendations,
+                gptResult.summary()
+        );
     }
 
-    /**
-     * 출발지 → 경유지들 → 종료지 조합해서 최종 경로 생성
-     */
-    private List<String> buildRoute(TravelDto req) {
-        List<String> full = new ArrayList<>();
-        full.add(req.getStartPoint());
+    private RouteAiResultDto callGPT(RouteAiPayload payload) {
 
-        if (req.getWaypoints() != null)
-            full.addAll(req.getWaypoints());
+        String systemPrompt = """
+            너는 한국 여행 루트를 구성하는 AI 플래너이다.
+            주어진 도시별 장소 목록을 기반으로:
+            - 선호 음식 카테고리를 반영하여 음식점 2개 추천
+            - 관광지 / 전시 / 축제 중 1개 추천
+            - 전체 여행 경로 Summary 작성
 
-        full.add(req.getEndPoint());
-        return full;
-    }
+            반드시 아래 JSON 출력 형식만 응답하라:
+            {
+              "cityRecommendations": [
+                {
+                  "cityName": "",
+                  "foods": [],
+                  "attractions": []
+                }
+              ],
+              "summary": ""
+            }
+            """;
 
-    /**
-     * AI 문장에서 경유지 자동 추출
-     * 예: "서울 → 대전 → 대구 → 부산"
-     * -> [대전, 대구]
-     */
-    private List<String> extractWaypoints(String aiText) {
+        try {
+            String userPrompt = "입력 데이터(JSON):\n" + JsonUtils.toJson(payload);
 
-        // 한글 지명만 추출하는 정규식
-        Pattern pattern = Pattern.compile("([가-힣]+)");
-        Matcher matcher = pattern.matcher(aiText);
+            // OpenAI API 직접 호출
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(apiKey);
 
-        List<String> places = new ArrayList<>();
+            Map<String, Object> requestBody = Map.of(
+                    "model", "gpt-4o-mini",
+                    "messages", List.of(
+                            Map.of("role", "system", "content", systemPrompt),
+                            Map.of("role", "user", "content", userPrompt)
+                    )
+            );
 
-        while (matcher.find()) {
-            places.add(matcher.group(1));
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+            @SuppressWarnings("unchecked")
+            Map<String, Object> response = restTemplate.postForObject(
+                    "https://api.openai.com/v1/chat/completions",
+                    entity,
+                    Map.class
+            );
+
+            if (response != null && response.containsKey("choices")) {
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
+                if (!choices.isEmpty()) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+                    String content = (String) message.get("content");
+                    return JsonUtils.fromJson(content, RouteAiResultDto.class);
+                }
+            }
+
+            throw new RuntimeException("GPT 응답이 비어있습니다");
+        } catch (Exception e) {
+            throw new RuntimeException("GPT 호출 실패: " + e.getMessage(), e);
         }
-
-        // 출발지 + 도착지만 있고 경유지가 없으면 빈 리스트
-        if (places.size() <= 2) {
-            return new ArrayList<>();
-        }
-
-        // 중간: 경유지들
-        return places.subList(1, places.size() - 1);
     }
 }
