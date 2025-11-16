@@ -5,6 +5,12 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### Backend ###
+backend/.gradle
+backend/build/
+backend/out/
+backend/bin/
+
 ### STS ###
 .apt_generated
 .classpath
@@ -29,6 +35,9 @@ out/
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
+
+### macOS ###
+.DS_Store
 /dist/
 /nbdist/
 /.nb-gradle/

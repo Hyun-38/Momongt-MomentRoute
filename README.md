@@ -1,9 +1,45 @@
 # Momongt : Moment-Route
 2025 학술제 - 모몽트 : Moment Route
 
+AI 기반 여행 경로 추천 시스템
+
 ---
 
-# ✅ 코드 컨벤션
+## 📂 프로젝트 구조
+
+```
+Momongt-MomentRoute/
+├── backend/          # Spring Boot 백엔드
+│   ├── src/
+│   ├── build.gradle
+│   └── README.md
+│
+├── frontend/         # React 프론트엔드 (예정)
+│
+└── README.md         # 이 파일
+```
+
+---
+
+## 🚀 빠른 시작
+
+### Backend
+```bash
+cd backend
+./gradlew bootRun
+```
+
+자세한 내용: [backend/README.md](backend/README.md)
+
+### Frontend
+```bash
+cd frontend
+# Coming soon...
+```
+
+---
+
+## ✅ 코드 컨벤션
 
 - **클래스명**: PascalCase (파스칼 케이스)  
 - **메서드/변수명**: camelCase (카멜 케이스)
@@ -12,7 +48,7 @@
 
 ---
 
-# ✅ 커밋 메시지 컨벤션
+## ✅ 커밋 메시지 컨벤션
 
 | 타입 | 설명 |
 |------|------|
@@ -24,7 +60,7 @@
 
 ---
 
-# 🌿 브랜치 전략
+## 🌿 브랜치 전략
 
 - 브랜치는 **이슈 템플릿 번호**를 기준으로 생성
 - 브랜치 이름은 **이슈 번호를 함께 표기**  
@@ -32,7 +68,7 @@
 
 ---
 
-# 📦 패키지 구조
+## 📦 Backend 패키지 구조
 ```
 com.Momongt.Momongt_MomentRoute
 │
@@ -48,29 +84,29 @@ com.Momongt.Momongt_MomentRoute
 
 ---
 
-# ⚙️ 개발 환경 설정
+## 🔧 개발 환경
 
-## 1. 데이터베이스 설정
+### Backend
+- Java 17
+- Spring Boot 3.5.7
+- MySQL
+- Gradle
 
-프로젝트는 **환경 변수**를 통해 데이터베이스 연결 정보를 관리합니다.
+### Frontend (예정)
+- React
+- TBD
 
-### 로컬 환경 설정 방법
-자세한 설정 방법은 [SETUP.md](SETUP.md) 문서를 참조하세요.
+---
 
-**간단 요약:**
-1. 환경 변수 설정 (Windows/Mac/Linux)
-2. IntelliJ에서 `local` 프로파일 활성화
-3. 애플리케이션 실행
+## 📚 문서
 
-## 2. 애플리케이션 구성 파일
+- [Backend 설정 가이드](backend/SETUP.md)
+- [Backend README](backend/README.md)
 
-- **`application.properties`**: 공통 설정 (JPA, Hibernate 등)
-- **`application-local.properties`**: 로컬 개발용 DB 연결 설정 (환경 변수 사용)
+---
 
-## 3. Swagger UI
+## 👥 팀
 
-애플리케이션 실행 후 다음 주소로 접속:
-- `http://localhost:8080/swagger-ui.html`
-- API 명세서 확인 및 테스트 가능
+2025 학술제 - 모몽트 팀
 
 
