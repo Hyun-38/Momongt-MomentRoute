@@ -47,9 +47,12 @@ public class AiService {
         }
 
         // 2) 경로 최적화 - 중요!
-        List<City> optimizedRoute = RouteOptimizer.optimize(viaCities, destination);
+        RouteOptimizer.OptimizationResult optimizationResult = RouteOptimizer.optimizeWithInfo(viaCities, destination);
+        List<City> optimizedRoute = optimizationResult.getRoute();
 
         System.out.println("=== 경로 최적화 결과 ===");
+        System.out.println("알고리즘: " + optimizationResult.getAlgorithm());
+        System.out.println("총 이동 거리: " + optimizationResult.getTotalDistanceKm() + " km");
         for (int i = 0; i < optimizedRoute.size(); i++) {
             City city = optimizedRoute.get(i);
             System.out.println((i + 1) + ". " + city.getName() +
@@ -116,7 +119,12 @@ public class AiService {
 
         return new RouteResponseDto(
                 cityRecommendations,
-                gptResult.summary()
+                gptResult.summary(),
+                new RouteResponseDto.RouteInfo(
+                        optimizedRoute.stream().map(City::getName).toList(),
+                        optimizationResult.getAlgorithm(),
+                        optimizationResult.getTotalDistanceKm()
+                )
         );
     }
 

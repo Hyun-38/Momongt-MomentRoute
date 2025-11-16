@@ -4,7 +4,8 @@ import java.util.List;
 
 public record RouteResponseDto(
         List<CityRecommendation> cities,
-        String summary
+        String summary,
+        RouteInfo routeInfo  // 경로 최적화 정보 추가
 ) {
 
     public record CityRecommendation(
@@ -21,5 +22,11 @@ public record RouteResponseDto(
             String description,
             Double latitude,
             Double longitude
+    ) {}
+
+    public record RouteInfo(
+            List<String> optimizedRoute,  // 최적화된 도시 순서
+            String algorithm,              // 사용된 알고리즘
+            Double totalDistanceKm         // 총 이동 거리
     ) {}
 }

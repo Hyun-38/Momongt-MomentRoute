@@ -7,6 +7,33 @@ import java.util.List;
 
 public class RouteOptimizer {
 
+    /**
+     * 경로 최적화 결과를 담는 클래스
+     */
+    public static class OptimizationResult {
+        private final List<City> route;
+        private final String algorithm;
+        private final double totalDistanceKm;
+
+        public OptimizationResult(List<City> route, String algorithm, double totalDistanceKm) {
+            this.route = route;
+            this.algorithm = algorithm;
+            this.totalDistanceKm = totalDistanceKm;
+        }
+
+        public List<City> getRoute() {
+            return route;
+        }
+
+        public String getAlgorithm() {
+            return algorithm;
+        }
+
+        public double getTotalDistanceKm() {
+            return totalDistanceKm;
+        }
+    }
+
     public static double distanceKm(City a, City b) {
 
         double lat1 = a.getLatitude();
@@ -26,18 +53,41 @@ public class RouteOptimizer {
         return R * c;
     }
 
-    public static List<City> optimize(List<City> viaCities, City destination) {
+    public static OptimizationResult optimizeWithInfo(List<City> viaCities, City destination) {
 
-        if (viaCities.isEmpty()) return List.of(destination);
+        if (viaCities.isEmpty()) {
+            return new OptimizationResult(
+                    List.of(destination),
+                    "DIRECT",
+                    0.0
+            );
+        }
 
         // 경유지가 5개 이상이면 휴리스틱 알고리즘 사용 (성능 개선)
         if (viaCities.size() >= 5) {
             System.out.println("경유지가 " + viaCities.size() + "개이므로 Nearest Neighbor 알고리즘 사용");
-            return nearestNeighborOptimize(viaCities, destination);
+            List<City> route = nearestNeighborOptimize(viaCities, destination);
+            double totalDistance = calculateTotalDistance(route);
+            return new OptimizationResult(route, "NEAREST_NEIGHBOR", totalDistance);
         } else {
             System.out.println("경유지가 " + viaCities.size() + "개이므로 Brute Force 알고리즘 사용");
-            return bruteForceOptimize(viaCities, destination);
+            List<City> route = bruteForceOptimize(viaCities, destination);
+            double totalDistance = calculateTotalDistance(route);
+            return new OptimizationResult(route, "BRUTE_FORCE", totalDistance);
         }
+    }
+
+    // 기존 호환성을 위한 메서드
+    public static List<City> optimize(List<City> viaCities, City destination) {
+        return optimizeWithInfo(viaCities, destination).getRoute();
+    }
+
+    private static double calculateTotalDistance(List<City> route) {
+        double total = 0.0;
+        for (int i = 0; i < route.size() - 1; i++) {
+            total += distanceKm(route.get(i), route.get(i + 1));
+        }
+        return Math.round(total * 100) / 100.0; // 소수점 둘째자리까지
     }
 
     /**
