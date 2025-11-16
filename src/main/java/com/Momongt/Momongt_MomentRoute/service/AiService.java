@@ -33,18 +33,116 @@ public class AiService {
     @Value("${openai.api-key}")
     private String apiKey;
 
+    /**
+     * 간단한 경로 순서만 반환 (도시명 리스트)
+     */
+    public SimpleRouteDto getSimpleRoute(RouteOptimizeRequestDto request) {
+        // 1) 요청 도시 조회
+        City destination = cityRepository.findByName(request.destinationCity())
+                .orElseThrow(() -> new IllegalArgumentException("도시를 찾을 수 없습니다: " + request.destinationCity()));
+
+        List<City> viaCities = new ArrayList<>();
+        if (request.viaCities() != null && !request.viaCities().isEmpty()) {
+            for (String cityNameRaw : request.viaCities()) {
+                // 콤마로 구분된 여러 도시명 처리
+                String[] cityNames = cityNameRaw.split(",");
+                for (String cityName : cityNames) {
+                    String trimmedName = cityName.trim();
+                    if (!trimmedName.isEmpty()) {
+                        City city = cityRepository.findByName(trimmedName)
+                                .orElseThrow(() -> new IllegalArgumentException("도시를 찾을 수 없습니다: " + trimmedName));
+                        viaCities.add(city);
+                    }
+                }
+            }
+        }
+
+        // 2) 경로 최적화
+        RouteOptimizer.OptimizationResult optimizationResult = RouteOptimizer.optimizeWithInfo(viaCities, destination);
+        List<City> optimizedRoute = optimizationResult.getRoute();
+
+        // 3) 도시명 리스트로 변환
+        List<String> routeNames = optimizedRoute.stream()
+                .map(City::getName)
+                .toList();
+
+        return new SimpleRouteDto(
+                routeNames,
+                optimizationResult.getAlgorithm(),
+                optimizationResult.getTotalDistanceKm()
+        );
+    }
+
+    /**
+     * 경로 최적화만 수행 (상세 정보 포함)
+     */
+    public OptimizedRouteDto optimizeRouteOnly(RouteOptimizeRequestDto request) {
+        // 1) 요청 도시 조회
+        City destination = cityRepository.findByName(request.destinationCity())
+                .orElseThrow(() -> new IllegalArgumentException("도시를 찾을 수 없습니다: " + request.destinationCity()));
+
+        List<City> viaCities = new ArrayList<>();
+        if (request.viaCities() != null && !request.viaCities().isEmpty()) {
+            for (String cityNameRaw : request.viaCities()) {
+                // 콤마로 구분된 여러 도시명 처리
+                String[] cityNames = cityNameRaw.split(",");
+                for (String cityName : cityNames) {
+                    String trimmedName = cityName.trim();
+                    if (!trimmedName.isEmpty()) {
+                        City city = cityRepository.findByName(trimmedName)
+                                .orElseThrow(() -> new IllegalArgumentException("도시를 찾을 수 없습니다: " + trimmedName));
+                        viaCities.add(city);
+                    }
+                }
+            }
+        }
+
+        // 2) 경로 최적화
+        RouteOptimizer.OptimizationResult optimizationResult = RouteOptimizer.optimizeWithInfo(viaCities, destination);
+        List<City> optimizedRoute = optimizationResult.getRoute();
+
+        // 3) 결과 변환
+        List<OptimizedRouteDto.CityInfo> routeInfo = new ArrayList<>();
+        for (int i = 0; i < optimizedRoute.size(); i++) {
+            City city = optimizedRoute.get(i);
+            routeInfo.add(new OptimizedRouteDto.CityInfo(
+                    city.getId(),
+                    city.getName(),
+                    city.getLatitude(),
+                    city.getLongitude(),
+                    i + 1  // 1부터 시작하는 순서
+            ));
+        }
+
+        return new OptimizedRouteDto(
+                routeInfo,
+                optimizationResult.getAlgorithm(),
+                optimizationResult.getTotalDistanceKm()
+        );
+    }
+
+    /**
+     * GPT 추천 포함 전체 경로 추천
+     */
     public RouteResponseDto recommendRoute(RouteRequestDto request) {
 
         // 1) 요청 도시 조회
         City destination = cityRepository.findByName(request.destinationCity())
-                .orElseThrow(() -> new RuntimeException("City not found: " + request.destinationCity()));
+                .orElseThrow(() -> new IllegalArgumentException("도시를 찾을 수 없습니다: " + request.destinationCity()));
 
         List<City> viaCities = new ArrayList<>();
         if (request.viaCities() != null && !request.viaCities().isEmpty()) {
-            for (String cityName : request.viaCities()) {
-                City city = cityRepository.findByName(cityName)
-                        .orElseThrow(() -> new RuntimeException("City not found: " + cityName));
-                viaCities.add(city);
+            for (String cityNameRaw : request.viaCities()) {
+                // 콤마로 구분된 여러 도시명 처리 (예: "동두천, 의정부" → ["동두천", "의정부"])
+                String[] cityNames = cityNameRaw.split(",");
+                for (String cityName : cityNames) {
+                    String trimmedName = cityName.trim();
+                    if (!trimmedName.isEmpty()) {
+                        City city = cityRepository.findByName(trimmedName)
+                                .orElseThrow(() -> new IllegalArgumentException("도시를 찾을 수 없습니다: " + trimmedName + " (사용 가능한 도시 목록을 확인해주세요)"));
+                        viaCities.add(city);
+                    }
+                }
             }
         }
 
@@ -269,7 +367,7 @@ public class AiService {
               "summary": "전체 여행 경로에 대한 스토리텔링 형식의 요약 (한국어, 5-7문장)"
             }
             
-            CRITICAL: 
+            CRITICAL:
             - Only use placeId from input
             - Create rich Korean descriptions
             - Don't invent places - if no FESTIVAL exists, return []
