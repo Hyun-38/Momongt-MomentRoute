@@ -89,10 +89,6 @@
   flex-shrink: 0; /* 크기 고정 */
 }
 
-.profile-section__info {
-  /* 이 컨테이너 자체는 특별한 스타일이 필요 없습니다. */
-}
-
 .info__name {
   font-size: 16px;
   color: #0F172A;
