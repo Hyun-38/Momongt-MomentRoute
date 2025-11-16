@@ -72,7 +72,7 @@ public class AiService {
         RouteAiResultDto gptResult = callGPT(payload);
 
         // 4) 프론트용 응답으로 변환
-        List<RouteResponseDto.CityRecommendation> cityRecommendations = gptResult.cityRecommendations().stream()
+        List<RouteResponseDto.CityRecommendation> cityRecommendations = gptResult.cities().stream()
                 .map(aiCity -> new RouteResponseDto.CityRecommendation(
                         aiCity.cityName(),
                         aiCity.foods().stream()
@@ -116,7 +116,7 @@ public class AiService {
             
             You MUST respond ONLY with this exact JSON format (no additional text):
             {
-              "cityRecommendations": [
+              "cities": [
                 {
                   "cityName": "city name",
                   "foods": [
@@ -145,8 +145,6 @@ public class AiService {
               ],
               "summary": "travel route summary"
             }
-            
-            Critical: The root object MUST have "cityRecommendations" field, NOT "cities".
             """;
 
         try {
@@ -187,11 +185,6 @@ public class AiService {
                     // 디버깅을 위해 GPT 응답 로깅
                     System.out.println("GPT Response: " + content);
 
-                    // GPT가 "cities"를 사용할 경우 "cityRecommendations"로 변환
-                    if (content.contains("\"cities\"") && !content.contains("\"cityRecommendations\"")) {
-                        content = content.replace("\"cities\"", "\"cityRecommendations\"");
-                        System.out.println("Converted 'cities' to 'cityRecommendations'");
-                    }
 
                     return JsonUtils.fromJson(content, RouteAiResultDto.class);
                 }

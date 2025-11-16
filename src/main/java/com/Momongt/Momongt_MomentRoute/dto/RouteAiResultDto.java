@@ -3,7 +3,7 @@ package com.Momongt.Momongt_MomentRoute.dto;
 import java.util.List;
 
 public record RouteAiResultDto(
-        List<CityRecommendation> cityRecommendations,
+        List<CityRecommendation> cities,
         String summary
 ) {
 
