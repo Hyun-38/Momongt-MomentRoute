@@ -187,6 +187,12 @@ public class AiService {
                     // 디버깅을 위해 GPT 응답 로깅
                     System.out.println("GPT Response: " + content);
 
+                    // GPT가 "cities"를 사용할 경우 "cityRecommendations"로 변환
+                    if (content.contains("\"cities\"") && !content.contains("\"cityRecommendations\"")) {
+                        content = content.replace("\"cities\"", "\"cityRecommendations\"");
+                        System.out.println("Converted 'cities' to 'cityRecommendations'");
+                    }
+
                     return JsonUtils.fromJson(content, RouteAiResultDto.class);
                 }
             }
