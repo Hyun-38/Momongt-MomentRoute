@@ -106,26 +106,26 @@ public class AiService {
     private RouteAiResultDto callGPT(RouteAiPayload payload) {
 
         String systemPrompt = """
-            너는 한국 여행 루트를 구성하는 AI 플래너이다.
-            주어진 도시별 장소 목록(JSON)을 기반으로:
-            1. 사용자가 선호하는 음식 카테고리를 반영하여 음식점(RESTAURANT) 2개 추천
-            2. 관광지(ATTRACTION) / 전시(EXHIBITION) / 축제(FESTIVAL) 중 1개 추천
-            3. 전체 여행 경로에 대한 Summary 작성
+            You are an AI travel planner for Korea.
+            Based on the provided city and place data (in JSON format):
+            1. Recommend 2 RESTAURANT places that match the user's preferred food categories
+            2. Recommend 1 place from ATTRACTION/EXHIBITION/FESTIVAL
+            3. Create a summary of the entire travel route
             
-            중요: 반드시 입력된 JSON의 placeId를 사용하여 추천해야 한다.
+            IMPORTANT: You MUST use the exact placeId from the input JSON.
             
-            반드시 아래 JSON 형식으로만 응답하라. 다른 텍스트는 포함하지 말 것:
+            You MUST respond ONLY with this exact JSON format (no additional text):
             {
               "cityRecommendations": [
                 {
-                  "cityName": "도시명",
+                  "cityName": "city name",
                   "foods": [
                     {
                       "placeId": 123,
-                      "name": "장소명",
+                      "name": "place name",
                       "type": "RESTAURANT",
-                      "category": "카테고리",
-                      "description": "설명",
+                      "category": "category",
+                      "description": "description",
                       "latitude": 37.123,
                       "longitude": 127.123
                     }
@@ -133,18 +133,20 @@ public class AiService {
                   "attractions": [
                     {
                       "placeId": 456,
-                      "name": "장소명",
+                      "name": "place name",
                       "type": "ATTRACTION",
-                      "category": "카테고리",
-                      "description": "설명",
+                      "category": "category",
+                      "description": "description",
                       "latitude": 37.123,
                       "longitude": 127.123
                     }
                   ]
                 }
               ],
-              "summary": "전체 여행 경로 요약"
+              "summary": "travel route summary"
             }
+            
+            Critical: The root object MUST have "cityRecommendations" field, NOT "cities".
             """;
 
         try {
