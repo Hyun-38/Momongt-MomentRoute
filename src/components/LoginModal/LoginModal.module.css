@@ -1,0 +1,107 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal {
+  width: 40%;
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  position: relative;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+  animation: fadeIn 0.22s ease;
+}
+
+.close {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+.iconWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.markerIcon {
+  width: 60px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.sub {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 28px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 95%;
+  padding: 12px 14px;
+  border: 1px solid #dce3ec;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 12px 0;
+  border-radius: 10px;
+  background: #cbd8ef;
+  color: white;
+  border: none;
+  font-size: 15px;
+}
+
+.enabled {
+  background: linear-gradient(to right, #00A6F4, #155DFC);
+  cursor: pointer;
+}
+
+.signupBox {
+  margin-top: 16px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.signupLink {
+  margin-left: 4px;
+  color: #007bff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}

@@ -1,0 +1,100 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #e7f3ff, #ffffff);
+}
+
+.container {
+  max-width: 90%;
+  margin: 0 auto;
+  padding-top: 80px;
+}
+
+.topTextSmall {
+  font-size: 14px;
+  color: #6b7684;
+  margin-bottom: 8px;
+}
+
+.topTextLarge {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 50px;
+  line-height: 1.4;
+}
+
+.limit {
+  font-size: 16px;
+  font-weight: 600;
+  color: #3a82ff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px 22px;
+  margin: 0 auto;
+  margin-bottom: 40px;
+}
+
+.regionBtn {
+  padding: 12px 0;
+  border: 1px solid #d8e3f2;
+  background: white;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: #333;
+}
+
+.regionBtn:hover {
+  background: #f1f7ff;
+}
+
+.active {
+  background: #3b82ff;
+  color: white;
+  border: none;
+}
+
+.bottomButtons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.prevBtn,
+.skipBtn,
+.nextBtn {
+  width: 500px;
+  padding: 12px 0;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.prevBtn {
+  background: #f1f4f9;
+  color: #7b8794;
+}
+
+.skipBtn {
+  background: #ffffff;
+  border: 1px solid #dfe7f3;
+  color: #5e6d7e;
+}
+
+.nextBtn {
+  background: #d4dff2;
+  color: white;
+}
+
+.enabled {
+  background: linear-gradient(to right, #00a6f4, #155dfc);
+  color: white !important;
+}

@@ -1,0 +1,106 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f2f8ff, #ffffff);
+}
+
+.container {
+  width: 90%;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.topTextSmall {
+  font-size: 14px;
+  color: #6b7a89;
+  margin-bottom: 6px;
+}
+
+.topTextLarge {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 80px;
+  color: #1a1a1a;
+}
+
+/* 아이콘 + 섹션 제목 */
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 400;
+  margin: 30px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.iconFood {
+  font-size: 18px;
+}
+
+.iconCategory {
+  font-size: 18px;
+}
+
+/* 버튼 그리드 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.optionBtn {
+  padding: 12px 0;
+  border-radius: 12px;
+  border: 1px solid #d3e2f5;
+  background: #ffffff;
+  color: #424b57;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.optionBtn:hover {
+  background: #f3f7ff;
+  color: black;
+}
+
+.active {
+  background: linear-gradient(to right, #00a6f4, #155dfc);
+  color: white;
+  font-weight: 600;
+}
+
+/* 하단 버튼 */
+.btnRow {
+  display: flex;
+  gap: 18px;
+  margin-top: 30px;
+}
+
+.prevBtn {
+  flex: 1;
+  padding: 14px 0;
+  border-radius: 12px;
+  background: #e9edf2;
+  border: none;
+  color: #444;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.nextBtn {
+  flex: 1;
+  padding: 14px 0;
+  border-radius: 12px;
+  background: #c7d6ed;
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.enabled {
+  background: linear-gradient(to right, #00A6F4, #155DFC);
+}

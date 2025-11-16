@@ -1,0 +1,196 @@
+.page {
+  width: 100%;
+  background: #f0f9ff;
+}
+
+/* HERO */
+.heroSection {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #dff2fe;
+  color: #0ea5e9;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.highlight {
+  color: #0ea5e9;
+}
+
+.sub {
+  font-size: 18px;
+  color: #475569;
+  margin: 16px auto 30px;
+  max-width: 520px;
+}
+
+.startBtn {
+  padding: 12px 30px;
+  height: 60px;
+  background: linear-gradient(90deg, #00a6f4, #155dfc);
+  border: none;
+  color: white;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+/* FEATURES SECTION */
+.featureSection {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 26px;
+  width: 260px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+.iconBlue {
+  font-size: 26px;
+  color: #0ea5e9;
+  margin-bottom: 12px;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.cardSub {
+  font-size: 14px;
+  color: #475569;
+  margin-top: 6px;
+}
+
+/* FESTIVAL */
+.festivalSection {
+  padding: 40px 20px;
+}
+
+.festivalHeader {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.PointerOrange {
+    margin-right: 10px;
+}
+
+.Recommend {
+    margin-left: 10px;
+}
+.badgeOrange {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+}
+
+.festivalSub {
+  margin-bottom: 20px;
+  color: #475569;
+}
+
+.festivalGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.festivalCard {
+  width: 100%;
+  height: 200px; /* 원하는 높이 */
+  border-radius: 16px;
+  background-size: cover;       /* 배경 꽉 채우기 */
+  background-position: center;  /* 중앙 정렬 */
+  background-repeat: no-repeat;  
+  position: relative; 
+  overflow: hidden;
+}
+
+.festivalInfo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 16px;
+
+  /* 어두운 그라데이션 오버레이 (읽기 편하게) */
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.55),
+    rgba(0, 0, 0, 0.2),
+    transparent
+  );
+
+  color: white;
+}
+
+.tag {
+  display: inline-block;
+  background: rgba(255, 207, 0, 0.9);
+  color: #5a3a00;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+.festivalInfo h3 {
+  font-size: 15px;
+  margin: 6px 0;
+}
+
+.festivalInfo p {
+  font-size: 13px;
+  
+}
+
+/* CTA */
+.ctaSection {
+  margin: 50px 20px;
+  padding: 40px;
+  background: linear-gradient(90deg, #00a6f4, #155dfc);
+  border-radius: 16px;
+  text-align: center;
+  color: white;
+}
+
+.ctaSection h2{
+  font-size: 30px;
+  font-weight: 400;
+}
+
+.ctaButton {
+    font-size: 14px;
+  margin-top: 20px;
+  padding: 12px 26px;
+  background: white;
+  color: #0ea5e9;
+  border: none;
+  border-radius: 10px;
+  font-weight: 400;
+  cursor: pointer;
+}
