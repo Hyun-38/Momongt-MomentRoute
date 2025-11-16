@@ -104,6 +104,7 @@ public class MemberDto {
     @Schema(description = "로그인 응답 DTO")
     public static class LoginResponse {
         private String accessToken;
+        private String email;
         private String refreshToken;
         private String tokenType;
         private Long expiresIn;

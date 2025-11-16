@@ -51,6 +51,7 @@ public class MemberService {
         return MemberDto.LoginResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .email(member.getEmail()) // 추가
                 .build();
     }
 
