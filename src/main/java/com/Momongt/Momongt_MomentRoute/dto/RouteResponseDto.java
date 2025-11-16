@@ -11,7 +11,9 @@ public record RouteResponseDto(
     public record CityRecommendation(
             String cityName,
             List<RecommendedPlace> foods,
-            List<RecommendedPlace> attractions
+            List<RecommendedPlace> attractions,
+            List<RecommendedPlace> festivals,
+            List<RecommendedPlace> exhibitions
     ) {}
 
     public record RecommendedPlace(
@@ -21,7 +23,9 @@ public record RouteResponseDto(
             String category,
             String description,
             Double latitude,
-            Double longitude
+            Double longitude,
+            String address,      // 프론트엔드 카드에 표시
+            String imageUrl      // 프론트엔드 카드 이미지
     ) {}
 
     public record RouteInfo(

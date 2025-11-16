@@ -19,6 +19,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,7 +77,9 @@ public class AiService {
                                     p.getName(),
                                     p.getDescription(),
                                     p.getLatitude(),
-                                    p.getLongitude()
+                                    p.getLongitude(),
+                                    p.getAddress(),
+                                    p.getImageUrl()
                             )).toList();
 
             cityPayloads.add(
@@ -104,30 +108,89 @@ public class AiService {
         // 4) GPT 호출
         RouteAiResultDto gptResult = callGPT(payload);
 
-        // 5) 프론트용 응답으로 변환
+        // 5) GPT가 추천한 placeId로 DB에서 실제 데이터 조회
+        Set<Long> allPlaceIds = gptResult.cities().stream()
+                .flatMap(city -> {
+                    List<Long> ids = new ArrayList<>();
+                    city.foods().forEach(p -> ids.add(p.placeId()));
+                    city.attractions().forEach(p -> ids.add(p.placeId()));
+                    if (city.festivals() != null) city.festivals().forEach(p -> ids.add(p.placeId()));
+                    if (city.exhibitions() != null) city.exhibitions().forEach(p -> ids.add(p.placeId()));
+                    return ids.stream();
+                })
+                .collect(Collectors.toSet());
+
+        Map<Long, Place> placeMap = placeRepository.findAllById(allPlaceIds).stream()
+                .collect(Collectors.toMap(Place::getId, p -> p));
+
+        // 6) GPT 설명 + DB 데이터 조합
         List<RouteResponseDto.CityRecommendation> cityRecommendations = gptResult.cities().stream()
                 .map(aiCity -> new RouteResponseDto.CityRecommendation(
                         aiCity.cityName(),
+                        // 음식점
                         aiCity.foods().stream()
-                                .map(p -> new RouteResponseDto.RecommendedPlace(
-                                        p.placeId(),
-                                        p.name(),
-                                        p.type(),
-                                        p.category(),
-                                        p.description(),
-                                        p.latitude(),
-                                        p.longitude()
-                                )).toList(),
+                                .map(gptPlace -> {
+                                    Place dbPlace = placeMap.get(gptPlace.placeId());
+                                    return new RouteResponseDto.RecommendedPlace(
+                                            dbPlace.getId(),
+                                            dbPlace.getName(),
+                                            dbPlace.getType().name(),
+                                            dbPlace.getCategory(),
+                                            gptPlace.description(),  // GPT가 생성한 풍부한 설명
+                                            dbPlace.getLatitude(),
+                                            dbPlace.getLongitude(),
+                                            dbPlace.getAddress(),
+                                            dbPlace.getImageUrl()
+                                    );
+                                }).toList(),
+                        // 관광지
                         aiCity.attractions().stream()
-                                .map(p -> new RouteResponseDto.RecommendedPlace(
-                                        p.placeId(),
-                                        p.name(),
-                                        p.type(),
-                                        p.category(),
-                                        p.description(),
-                                        p.latitude(),
-                                        p.longitude()
-                                )).toList()
+                                .map(gptPlace -> {
+                                    Place dbPlace = placeMap.get(gptPlace.placeId());
+                                    return new RouteResponseDto.RecommendedPlace(
+                                            dbPlace.getId(),
+                                            dbPlace.getName(),
+                                            dbPlace.getType().name(),
+                                            dbPlace.getCategory(),
+                                            gptPlace.description(),
+                                            dbPlace.getLatitude(),
+                                            dbPlace.getLongitude(),
+                                            dbPlace.getAddress(),
+                                            dbPlace.getImageUrl()
+                                    );
+                                }).toList(),
+                        // 축제
+                        aiCity.festivals() != null ? aiCity.festivals().stream()
+                                .map(gptPlace -> {
+                                    Place dbPlace = placeMap.get(gptPlace.placeId());
+                                    return new RouteResponseDto.RecommendedPlace(
+                                            dbPlace.getId(),
+                                            dbPlace.getName(),
+                                            dbPlace.getType().name(),
+                                            dbPlace.getCategory(),
+                                            gptPlace.description(),
+                                            dbPlace.getLatitude(),
+                                            dbPlace.getLongitude(),
+                                            dbPlace.getAddress(),
+                                            dbPlace.getImageUrl()
+                                    );
+                                }).toList() : List.of(),
+                        // 전시
+                        aiCity.exhibitions() != null ? aiCity.exhibitions().stream()
+                                .map(gptPlace -> {
+                                    Place dbPlace = placeMap.get(gptPlace.placeId());
+                                    return new RouteResponseDto.RecommendedPlace(
+                                            dbPlace.getId(),
+                                            dbPlace.getName(),
+                                            dbPlace.getType().name(),
+                                            dbPlace.getCategory(),
+                                            gptPlace.description(),
+                                            dbPlace.getLatitude(),
+                                            dbPlace.getLongitude(),
+                                            dbPlace.getAddress(),
+                                            dbPlace.getImageUrl()
+                                    );
+                                }).toList() : List.of()
                 )).toList();
 
         return new RouteResponseDto(
@@ -147,65 +210,74 @@ public class AiService {
             You are an AI travel planner for Korea.
             
             CRITICAL RULES:
-            1. You MUST recommend places for EVERY city in the input data (routeCities array)
-            2. You MUST ONLY use places from the provided JSON input data
-            3. You MUST use the EXACT placeId, name, type, category, description (including null), latitude, longitude from the input
-            4. DO NOT invent or create new places
-            5. DO NOT modify place names or details
-            6. DO NOT skip any cities - provide recommendations for ALL cities in the input
-            7. PRESERVE null values - if description is null in input, keep it null in output
+            1. You MUST recommend places for EVERY city in the input routeCities array
+            2. You MUST ONLY use placeId from the provided input data
+            3. DO NOT invent new places - only select from the given list
+            4. Create RICH, ENGAGING descriptions (2-3 sentences) for each place
+            5. DO NOT skip any cities
             
-            For EACH city in the input routeCities array:
+            For EACH city in the optimized route order:
             
-            FOODS (2 places):
-            - Select 2 RESTAURANT places that match user's preferred food categories (한식, 일식, 중식, 양식)
-            - Use the EXACT description from input (even if null)
+            FOODS (2-3 places):
+            - Select 2-3 RESTAURANT places matching user's food categories (한식, 일식, 중식, 양식)
+            - If user wants "한식", select only 한식 restaurants
+            - Create engaging descriptions explaining why this place is recommended
             
-            ATTRACTIONS (1-3 places):
-            - Prioritize VARIETY across different types: ATTRACTION, FESTIVAL, EXHIBITION
-            - If multiple types available, select from different types (e.g., 1 ATTRACTION, 1 FESTIVAL, 1 EXHIBITION)
-            - If only one type available, select 1-2 from that type
-            - Aim for diverse experiences (문화유적, 공원, 박물관, 축제 등)
+            ATTRACTIONS (2 places each type):
+            - Select 2 ATTRACTION places (문화유적, 공원, 관광지 등)
+            - Select 2 FESTIVAL places if available (don't invent if none exist)
+            - Select 2 EXHIBITION places if available (don't invent if none exist)
+            - Prioritize variety in experiences
             
-            Create a comprehensive summary covering the entire multi-city travel route.
+            IMPORTANT:
+            - Only return placeId and description
+            - Description should be rich and engaging (2-3 sentences in Korean)
+            - If a type (FESTIVAL/EXHIBITION) is not available, return empty array
+            - Do NOT create fake places
             
-            Respond ONLY with this JSON format:
+            Response JSON format:
             {
               "cities": [
                 {
-                  "cityName": "first city name",
-                  "foods": [ 
-                    { 
+                  "cityName": "city name",
+                  "foods": [
+                    {
                       "placeId": 123,
-                      "name": "exact name",
-                      "type": "RESTAURANT",
-                      "category": "exact category",
-                      "description": "exact description or null",
-                      "latitude": 37.123,
-                      "longitude": 127.123
+                      "description": "풍부한 2-3문장 설명"
                     }
                   ],
-                  "attractions": [ 
-                    { 
+                  "attractions": [
+                    {
                       "placeId": 456,
-                      "name": "exact name",
-                      "type": "ATTRACTION or FESTIVAL or EXHIBITION",
-                      "category": "exact category or null",
-                      "description": "exact description or null",
-                      "latitude": 37.456,
-                      "longitude": 127.456
+                      "description": "풍부한 2-3문장 설명"
+                    },
+                    {
+                      "placeId": 457,
+                      "description": "풍부한 2-3문장 설명"
+                    }
+                  ],
+                  "festivals": [
+                    {
+                      "placeId": 789,
+                      "description": "풍부한 2-3문장 설명"
+                    }
+                  ],
+                  "exhibitions": [
+                    {
+                      "placeId": 999,
+                      "description": "풍부한 2-3문장 설명"
                     }
                   ]
-                },
-                ... (continue for ALL cities)
+                }
               ],
-              "summary": "Complete travel route summary for all cities"
+              "summary": "전체 여행 경로에 대한 스토리텔링 형식의 요약 (한국어, 5-7문장)"
             }
             
             CRITICAL: 
-            - Number of city objects MUST equal number of input cities
-            - Use EXACT values from input including null
-            - Vary attraction types when possible (ATTRACTION, FESTIVAL, EXHIBITION)
+            - Only use placeId from input
+            - Create rich descriptions
+            - Don't invent places - if no FESTIVAL exists, return []
+            - Match city count in response to input count
             """;
 
         try {

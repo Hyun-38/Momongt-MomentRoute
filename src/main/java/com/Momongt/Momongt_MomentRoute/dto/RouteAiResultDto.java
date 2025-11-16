@@ -9,8 +9,10 @@ public record RouteAiResultDto(
 
     public record CityRecommendation(
             String cityName,
-            List<RecommendedPlace> foods,            // 음식점 2개
-            List<RecommendedPlace> attractions       // 관광/축제/전시 1개
+            List<RecommendedPlace> foods,         // 음식점 2-3개
+            List<RecommendedPlace> attractions,   // 관광지 2개
+            List<RecommendedPlace> festivals,     // 축제 2개 (없으면 빈 배열)
+            List<RecommendedPlace> exhibitions    // 전시 2개 (없으면 빈 배열)
     ) {}
 
     public record RecommendedPlace(
@@ -20,6 +22,8 @@ public record RouteAiResultDto(
             String category,    // 한식, 카페 등
             String description,
             Double latitude,
-            Double longitude
+            Double longitude,
+            String address,
+            String imageUrl
     ) {}
 }

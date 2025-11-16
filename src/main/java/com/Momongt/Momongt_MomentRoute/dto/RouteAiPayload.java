@@ -21,6 +21,8 @@ public record RouteAiPayload(
             String name,
             String description,
             Double latitude,
-            Double longitude
+            Double longitude,
+            String address,
+            String imageUrl
     ) {}
 }
