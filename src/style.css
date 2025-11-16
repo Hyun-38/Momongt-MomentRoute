@@ -23,7 +23,7 @@ body, html {
 }
 
 /* -------------------------
-   2. 재사용 컴포넌트 (버튼, 뱃지)
+  2. 재사용 컴포넌트 (버튼, 뱃지)
 ------------------------- */
 
 /* 공용 버튼 스타일 */
@@ -81,7 +81,7 @@ body, html {
 }
 
 /* -------------------------
-   3. 헤더 (main-header)
+  3. 헤더 (main-header)
 ------------------------- */
 .main-header {
     width: 100%;
@@ -93,13 +93,33 @@ body, html {
     z-index: 100;
 }
 
-.main-header .container {
+/* 참고: Header.jsx는 <nav className="container">를 사용합니다.
+  이 CSS는 .main-header .container {} 또는 nav.container {} 를 기대합니다.
+  Header.jsx의 구조와 이 CSS가 잘 맞는지 확인이 필요합니다. 
+  (이전 답변에서 nav.container에 맞게 임시 수정했던 코드를 유지합니다)
+*/
+nav.container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 64px;
+    
+    /* main-header의 속성들 적용 */
+    width: 100%;
+    max-width: 100%; /* container의 max-width 덮어쓰기 */
+    background: rgba(255, 255, 255, 0.6);
+    border-bottom: 1px #BAE6FD solid;
+    backdrop-filter: blur(5px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    
+    /* 내부 div .container를 위한 패딩 재조정 */
+    padding: 0 24px;
 }
 
+/* nav.container의 직계 자식들을 정렬하기 위한 내부 래퍼가 없으므로
+  로고와 nav-links가 중앙 정렬되도록 수정 */
 .logo {
     display: flex;
     align-items: center;
@@ -108,7 +128,32 @@ body, html {
     color: #0F172A;
     font-size: 20px;
     font-weight: 500;
+    
+    /* 중앙 정렬을 위해 추가 */
+    margin-left: auto; 
+    position: relative;
+    left: 24px; /* 로고와 링크 사이 간격 보정 */
 }
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    
+    /* 중앙 정렬을 위해 추가 */
+    margin-right: auto;
+}
+
+/* nav.container 내부의 최대 너비를 제한하는 가상 .container 역할 */
+.logo, .nav-links {
+    max-width: 512px; /* (1024 / 2) */
+}
+.logo {
+    justify-content: flex-start;
+}
+.nav-links {
+    justify-content: flex-end;
+}
+
 
 /* 피그마 로고 아이콘 CSS로 구현 */
 .logo-icon {
@@ -132,12 +177,6 @@ body, html {
     left: 9px;
     top: 7px;
     outline: 2px #0EA5E9 solid;
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 16px;
 }
 
 .nav-link {
@@ -175,7 +214,7 @@ body, html {
 }
 
 /* -------------------------
-   4. 메인 콘텐츠 (main-content)
+  4. 메인 콘텐츠 (main-content)
 ------------------------- */
 .main-content {
     width: 100%;
@@ -183,8 +222,12 @@ body, html {
     background: linear-gradient(180deg, #F0F9FF 0%, white 100%);
 }
 
+/* ... (이하 Home.jsx의 .hero-section, .features-section 등 
+  style.css의 나머지 스타일 코드가 모두 포함되어야 합니다) ...
+*/
+
 /* -------------------------
-   5. 히어로 섹션 (hero-section)
+  5. 히어로 섹션 (hero-section)
 ------------------------- */
 .hero-section {
     display: flex;
@@ -239,7 +282,7 @@ body, html {
 
 
 /* -------------------------
-   6. 기능 소개 섹션 (features-section)
+  6. 기능 소개 섹션 (features-section)
 ------------------------- */
 .features-section {
     display: grid;
@@ -286,7 +329,7 @@ body, html {
 }
 
 /* -------------------------
-   7. 축제 목록 섹션 (festivals-section)
+  7. 축제 목록 섹션 (festivals-section)
 ------------------------- */
 .festivals-section {
     background: white;
@@ -435,7 +478,7 @@ body, html {
 }
 
 /* -------------------------
-   8. CTA 섹션 (cta-section)
+  8. CTA 섹션 (cta-section)
 ------------------------- */
 .cta-section {
     padding: 64px 24px;
@@ -470,7 +513,7 @@ body, html {
 
 
 /* -------------------------
-   9. 반응형 (모바일)
+  9. 반응형 (모바일)
 ------------------------- */
 @media (max-width: 860px) {
     /* 기능 소개: 1단으로 변경 */
@@ -486,7 +529,7 @@ body, html {
 
 @media (max-width: 600px) {
     /* 컨테이너 좌우 여백 줄이기 */
-    .container {
+    .container, nav.container {
         padding: 16px 16px;
     }
     

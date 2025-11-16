@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'; // 1. useEffect 임포트
 import { Link } from 'react-router-dom';
+import Header from "../components/Header/Header.jsx";
 
 import ConfirmModal from '../components/ConfirmModal';
 import ToastPopup from '../components/ToastPopup';
@@ -143,6 +144,8 @@ function MyTrips() {
   };
 
   return (
+    <>
+    <Header isLoggedIn={false} onLogout={() => {}} />
     <main className="main-content">
       <div className="container mytrips-container">
         
@@ -245,6 +248,7 @@ function MyTrips() {
         onConfirm={handleConfirmDelete}
       />
     </main>
+    </>
   );
 }
 

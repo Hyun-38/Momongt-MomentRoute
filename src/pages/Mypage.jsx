@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'; // 1. useEffect 임포트
+import Header from "../components/Header/Header.jsx";
 import ToastPopup from '../components/ToastPopup';
 import ConfirmModal from '../components/ConfirmModal';
 import './Mypage.css';
@@ -140,6 +141,8 @@ function MyPage() {
 
   // 9. 로딩 완료 후 실제 페이지 렌더링
   return (
+    <>
+    <Header isLoggedIn={false} onLogout={() => {}} />
     <main className="main-content">
       <div className="container mypage-container">
         
@@ -288,6 +291,7 @@ function MyPage() {
         />
     </div>
     </main>
+  </>
   );
 }
 
