@@ -146,50 +146,40 @@ public class AiService {
             You are an AI travel planner for Korea.
             
             CRITICAL RULES:
-            1. You MUST ONLY recommend places from the provided JSON input data
-            2. You MUST use the EXACT placeId, name, type, category, latitude, longitude from the input
-            3. DO NOT invent or create new places
-            4. DO NOT modify place names or details
-            5. Only SELECT from the given places based on user preferences
+            1. You MUST recommend places for EVERY city in the input data (routeCities array)
+            2. You MUST ONLY use places from the provided JSON input data
+            3. You MUST use the EXACT placeId, name, type, category, latitude, longitude from the input
+            4. DO NOT invent or create new places
+            5. DO NOT modify place names or details
+            6. DO NOT skip any cities - provide recommendations for ALL cities in the input
             
-            Based on the provided place data:
-            - Recommend 2 RESTAURANT places matching user's food categories
-            - Recommend 1 place from ATTRACTION/EXHIBITION/FESTIVAL types
-            - Create a summary of the travel route
+            For EACH city in the input routeCities array:
+            - Recommend 2 RESTAURANT places matching user's food categories (if available)
+            - Recommend 1 place from ATTRACTION/EXHIBITION/FESTIVAL types (if available)
+            - If a city doesn't have enough places in a category, recommend what's available
+            
+            Create a comprehensive summary covering the entire multi-city travel route.
             
             Respond ONLY with this JSON format:
             {
               "cities": [
                 {
-                  "cityName": "city name from input",
-                  "foods": [
-                    {
-                      "placeId": <exact ID from input>,
-                      "name": "<exact name from input>",
-                      "type": "<exact type from input>",
-                      "category": "<exact category from input>",
-                      "description": "<exact description from input>",
-                      "latitude": <exact latitude from input>,
-                      "longitude": <exact longitude from input>
-                    }
-                  ],
-                  "attractions": [
-                    {
-                      "placeId": <exact ID from input>,
-                      "name": "<exact name from input>",
-                      "type": "<exact type from input>",
-                      "category": "<exact category from input>",
-                      "description": "<exact description from input>",
-                      "latitude": <exact latitude from input>,
-                      "longitude": <exact longitude from input>
-                    }
-                  ]
-                }
+                  "cityName": "first city name",
+                  "foods": [ { "placeId": ..., "name": ..., ... } ],
+                  "attractions": [ { "placeId": ..., "name": ..., ... } ]
+                },
+                {
+                  "cityName": "second city name",
+                  "foods": [ ... ],
+                  "attractions": [ ... ]
+                },
+                ... (continue for ALL cities in input)
               ],
-              "summary": "Korean travel route summary"
+              "summary": "Complete travel route summary for all cities"
             }
             
-            REMEMBER: Use ONLY the places provided in the input JSON. Do NOT create new places.
+            CRITICAL: The number of city objects in "cities" array MUST equal the number of cities in the input routeCities array.
+            If input has 3 cities, output must have 3 city objects. If input has 1 city, output must have 1 city object.
             """;
 
         try {
