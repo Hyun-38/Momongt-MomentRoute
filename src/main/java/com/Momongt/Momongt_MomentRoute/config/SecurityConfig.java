@@ -17,6 +17,15 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // POST/PUT 요청 테스트용으로 CSRF 비활성화
                 .cors(cors -> cors.disable()) // 필요하면 활성화 가능
                 .authorizeHttpRequests(auth -> auth
+                        // Swagger 관련 경로 허용
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
                         .requestMatchers("/**").permitAll() // 모든 요청 허용
                 )
                 .formLogin(form -> form.disable()) // 로그인 폼 사용 안 함
