@@ -95,7 +95,8 @@ public class AiService {
             System.out.println("  총 " + cityPayload.places().size() + "개의 장소");
             for (RouteAiPayload.RoutePlacePayload place : cityPayload.places()) {
                 System.out.println("  - [" + place.placeId() + "] " + place.name() +
-                    " (" + place.type() + ", " + place.category() + ")");
+                    " (" + place.type() + ", " + place.category() +
+                    ", desc: " + (place.description() != null ? place.description() : "null") + ")");
             }
         }
         System.out.println("=====================================");
@@ -148,15 +149,23 @@ public class AiService {
             CRITICAL RULES:
             1. You MUST recommend places for EVERY city in the input data (routeCities array)
             2. You MUST ONLY use places from the provided JSON input data
-            3. You MUST use the EXACT placeId, name, type, category, latitude, longitude from the input
+            3. You MUST use the EXACT placeId, name, type, category, description (including null), latitude, longitude from the input
             4. DO NOT invent or create new places
             5. DO NOT modify place names or details
             6. DO NOT skip any cities - provide recommendations for ALL cities in the input
+            7. PRESERVE null values - if description is null in input, keep it null in output
             
             For EACH city in the input routeCities array:
-            - Recommend 2 RESTAURANT places matching user's food categories (if available)
-            - Recommend 1 place from ATTRACTION/EXHIBITION/FESTIVAL types (if available)
-            - If a city doesn't have enough places in a category, recommend what's available
+            
+            FOODS (2 places):
+            - Select 2 RESTAURANT places that match user's preferred food categories (한식, 일식, 중식, 양식)
+            - Use the EXACT description from input (even if null)
+            
+            ATTRACTIONS (1-3 places):
+            - Prioritize VARIETY across different types: ATTRACTION, FESTIVAL, EXHIBITION
+            - If multiple types available, select from different types (e.g., 1 ATTRACTION, 1 FESTIVAL, 1 EXHIBITION)
+            - If only one type available, select 1-2 from that type
+            - Aim for diverse experiences (문화유적, 공원, 박물관, 축제 등)
             
             Create a comprehensive summary covering the entire multi-city travel route.
             
@@ -165,21 +174,38 @@ public class AiService {
               "cities": [
                 {
                   "cityName": "first city name",
-                  "foods": [ { "placeId": ..., "name": ..., ... } ],
-                  "attractions": [ { "placeId": ..., "name": ..., ... } ]
+                  "foods": [ 
+                    { 
+                      "placeId": 123,
+                      "name": "exact name",
+                      "type": "RESTAURANT",
+                      "category": "exact category",
+                      "description": "exact description or null",
+                      "latitude": 37.123,
+                      "longitude": 127.123
+                    }
+                  ],
+                  "attractions": [ 
+                    { 
+                      "placeId": 456,
+                      "name": "exact name",
+                      "type": "ATTRACTION or FESTIVAL or EXHIBITION",
+                      "category": "exact category or null",
+                      "description": "exact description or null",
+                      "latitude": 37.456,
+                      "longitude": 127.456
+                    }
+                  ]
                 },
-                {
-                  "cityName": "second city name",
-                  "foods": [ ... ],
-                  "attractions": [ ... ]
-                },
-                ... (continue for ALL cities in input)
+                ... (continue for ALL cities)
               ],
               "summary": "Complete travel route summary for all cities"
             }
             
-            CRITICAL: The number of city objects in "cities" array MUST equal the number of cities in the input routeCities array.
-            If input has 3 cities, output must have 3 city objects. If input has 1 city, output must have 1 city object.
+            CRITICAL: 
+            - Number of city objects MUST equal number of input cities
+            - Use EXACT values from input including null
+            - Vary attraction types when possible (ATTRACTION, FESTIVAL, EXHIBITION)
             """;
 
         try {
