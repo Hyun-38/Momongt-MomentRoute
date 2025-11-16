@@ -72,4 +72,18 @@ public class MemberController {
 
         return ResponseEntity.ok(memberService.changePassword(member, request));
     }
+
+    /** 회원 탈퇴 */
+    @DeleteMapping("/me")
+    @Operation(summary = "회원 탈퇴", security = @SecurityRequirement(name = "bearerAuth"))
+    public ResponseEntity<MemberDto.DeleteMemberResponse> deleteMember(
+            @RequestAttribute("userId") Long userId) {
+
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("회원 없음"));
+
+        return ResponseEntity.ok(memberService.deleteMember(member));
+    }
+
+
 }

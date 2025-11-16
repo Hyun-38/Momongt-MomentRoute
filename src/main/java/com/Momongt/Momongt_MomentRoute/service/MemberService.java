@@ -79,15 +79,35 @@ public class MemberService {
 
     /** 비밀번호 변경 */
     public MemberDto.ChangePasswordResponse changePassword(Member member, MemberDto.ChangePasswordRequest request) {
-        if (!passwordEncoder.matches(request.getCurrentPassword(), member.getPassword())) {
-            throw new RuntimeException("현재 비밀번호 불일치");
+        // Null 체크
+        if (request.getOldPassword() == null || request.getOldPassword().isEmpty()) {
+            throw new IllegalArgumentException("현재 비밀번호를 입력해주세요");
         }
 
+        if (request.getNewPassword() == null || request.getNewPassword().isEmpty()) {
+            throw new IllegalArgumentException("새 비밀번호를 입력해주세요");
+        }
+
+        // 현재 비밀번호 확인
+        if (!passwordEncoder.matches(request.getOldPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다");
+        }
+
+        // 새 비밀번호로 변경
         member.setPassword(passwordEncoder.encode(request.getNewPassword()));
         memberRepository.save(member);
 
         return MemberDto.ChangePasswordResponse.builder()
                 .message("비밀번호 변경 완료")
+                .build();
+    }
+
+    /** 회원 탈퇴 */
+    public MemberDto.DeleteMemberResponse deleteMember(Member member) {
+        memberRepository.delete(member);
+
+        return MemberDto.DeleteMemberResponse.builder()
+                .message("회원 탈퇴 완료")
                 .build();
     }
 }

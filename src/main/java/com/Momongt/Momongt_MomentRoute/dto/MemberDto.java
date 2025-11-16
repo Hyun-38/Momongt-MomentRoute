@@ -12,13 +12,13 @@ import lombok.*;
 @Schema(description = "회원 정보 DTO")
 public class MemberDto {
 
-    @Schema(description = "유저 아이디", example = "1", required = true)
+    @Schema(description = "유저 아이디", example = "1")
     private Long userId;
 
-    @Schema(description = "이름", example = "HongGilDong", required = true)
+    @Schema(description = "이름", example = "HongGilDong")
     private String name;
 
-    @Schema(description = "전화번호", example = "010-1234-5678", required = true)
+    @Schema(description = "전화번호", example = "010-1234-5678")
     private String phoneNumber;
 
     @Schema(description = "생년월일", example = "2003-03-03")
@@ -166,7 +166,10 @@ public class MemberDto {
     @AllArgsConstructor
     @Schema(description = "비밀번호 변경 요청 DTO")
     public static class ChangePasswordRequest {
-        private String currentPassword;
+        @Schema(description = "현재 비밀번호")
+        private String oldPassword;
+
+        @Schema(description = "새 비밀번호")
         private String newPassword;
     }
 
@@ -177,6 +180,19 @@ public class MemberDto {
     @AllArgsConstructor
     @Schema(description = "비밀번호 변경 응답 DTO")
     public static class ChangePasswordResponse {
+        private String message;
+    }
+
+    /* ============================================================
+        회원 탈퇴
+    ============================================================ */
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "회원 탈퇴 응답 DTO")
+    public static class DeleteMemberResponse {
         private String message;
     }
 
