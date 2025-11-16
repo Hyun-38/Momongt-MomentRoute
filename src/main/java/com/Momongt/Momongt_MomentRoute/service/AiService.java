@@ -6,6 +6,7 @@ import com.Momongt.Momongt_MomentRoute.entity.Place;
 import com.Momongt.Momongt_MomentRoute.repository.CityRepository;
 import com.Momongt.Momongt_MomentRoute.repository.PlaceRepository;
 import com.Momongt.Momongt_MomentRoute.util.JsonUtils;
+import com.Momongt.Momongt_MomentRoute.util.RouteOptimizer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,18 +33,34 @@ public class AiService {
 
     public RouteResponseDto recommendRoute(RouteRequestDto request) {
 
-        // 1) 요청 도시 순서 정리
-        List<String> ordered = new ArrayList<>();
-        if (request.viaCities() != null) ordered.addAll(request.viaCities());
-        ordered.add(request.destinationCity());
+        // 1) 요청 도시 조회
+        City destination = cityRepository.findByName(request.destinationCity())
+                .orElseThrow(() -> new RuntimeException("City not found: " + request.destinationCity()));
 
-        // 2) DB 조회 → RouteAiPayload 생성
+        List<City> viaCities = new ArrayList<>();
+        if (request.viaCities() != null && !request.viaCities().isEmpty()) {
+            for (String cityName : request.viaCities()) {
+                City city = cityRepository.findByName(cityName)
+                        .orElseThrow(() -> new RuntimeException("City not found: " + cityName));
+                viaCities.add(city);
+            }
+        }
+
+        // 2) 경로 최적화 - 중요!
+        List<City> optimizedRoute = RouteOptimizer.optimize(viaCities, destination);
+
+        System.out.println("=== 경로 최적화 결과 ===");
+        for (int i = 0; i < optimizedRoute.size(); i++) {
+            City city = optimizedRoute.get(i);
+            System.out.println((i + 1) + ". " + city.getName() +
+                " (위도: " + city.getLatitude() + ", 경도: " + city.getLongitude() + ")");
+        }
+        System.out.println("=====================");
+
+        // 3) DB 조회 → RouteAiPayload 생성 (최적화된 순서대로)
         List<RouteAiPayload.RouteCityPayload> cityPayloads = new ArrayList<>();
 
-        for (String cityName : ordered) {
-            City city = cityRepository.findByName(cityName)
-                    .orElseThrow(() -> new RuntimeException("City not found: " + cityName));
-
+        for (City city : optimizedRoute) {
             List<Place> places = placeRepository.findByCity_Id(city.getId());
 
             List<RouteAiPayload.RoutePlacePayload> placePayloads =
