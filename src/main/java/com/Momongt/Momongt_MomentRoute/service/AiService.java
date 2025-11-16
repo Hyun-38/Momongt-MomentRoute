@@ -75,11 +75,8 @@ public class AiService {
                                     p.getType().name(),
                                     p.getCategory(),
                                     p.getName(),
-                                    p.getDescription(),
-                                    p.getLatitude(),
-                                    p.getLongitude(),
-                                    p.getAddress(),
-                                    p.getImageUrl()
+                                    p.getDescription()
+                                    // address, imageUrl, latitude, longitude 제외!
                             )).toList();
 
             cityPayloads.add(
@@ -213,8 +210,11 @@ public class AiService {
             1. You MUST recommend places for EVERY city in the input routeCities array
             2. You MUST ONLY use placeId from the provided input data
             3. DO NOT invent new places - only select from the given list
-            4. Create RICH, ENGAGING descriptions (2-3 sentences) for each place
+            4. Create RICH, ENGAGING descriptions (2-3 sentences in Korean) for each place
             5. DO NOT skip any cities
+            
+            Input data contains: placeId, type, category, name, description (basic info)
+            You will use this to SELECT places and create rich descriptions.
             
             For EACH city in the optimized route order:
             
@@ -250,10 +250,6 @@ public class AiService {
                     {
                       "placeId": 456,
                       "description": "풍부한 2-3문장 설명"
-                    },
-                    {
-                      "placeId": 457,
-                      "description": "풍부한 2-3문장 설명"
                     }
                   ],
                   "festivals": [
@@ -275,7 +271,7 @@ public class AiService {
             
             CRITICAL: 
             - Only use placeId from input
-            - Create rich descriptions
+            - Create rich Korean descriptions
             - Don't invent places - if no FESTIVAL exists, return []
             - Match city count in response to input count
             """;

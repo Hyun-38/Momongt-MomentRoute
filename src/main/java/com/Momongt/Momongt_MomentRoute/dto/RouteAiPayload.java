@@ -15,14 +15,10 @@ public record RouteAiPayload(
     ) {}
 
     public record RoutePlacePayload(
-            Long placeId,
-            String type,
-            String category,
-            String name,
-            String description,
-            Double latitude,
-            Double longitude,
-            String address,
-            String imageUrl
+            Long placeId,        // 선택을 위한 ID
+            String type,         // RESTAURANT/ATTRACTION/FESTIVAL/EXHIBITION
+            String category,     // 한식, 일식, 중식, 양식 등
+            String name,         // 장소 이름 (GPT가 선택 판단용)
+            String description   // 간단한 설명 (GPT가 풍부하게 확장할 베이스)
     ) {}
 }
