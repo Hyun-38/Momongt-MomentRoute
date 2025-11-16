@@ -107,21 +107,43 @@ public class AiService {
 
         String systemPrompt = """
             너는 한국 여행 루트를 구성하는 AI 플래너이다.
-            주어진 도시별 장소 목록을 기반으로:
-            - 선호 음식 카테고리를 반영하여 음식점 2개 추천
-            - 관광지 / 전시 / 축제 중 1개 추천
-            - 전체 여행 경로 Summary 작성
-
-            반드시 아래 JSON 출력 형식만 응답하라:
+            주어진 도시별 장소 목록(JSON)을 기반으로:
+            1. 사용자가 선호하는 음식 카테고리를 반영하여 음식점(RESTAURANT) 2개 추천
+            2. 관광지(ATTRACTION) / 전시(EXHIBITION) / 축제(FESTIVAL) 중 1개 추천
+            3. 전체 여행 경로에 대한 Summary 작성
+            
+            중요: 반드시 입력된 JSON의 placeId를 사용하여 추천해야 한다.
+            
+            반드시 아래 JSON 형식으로만 응답하라. 다른 텍스트는 포함하지 말 것:
             {
               "cityRecommendations": [
                 {
-                  "cityName": "",
-                  "foods": [],
-                  "attractions": []
+                  "cityName": "도시명",
+                  "foods": [
+                    {
+                      "placeId": 123,
+                      "name": "장소명",
+                      "type": "RESTAURANT",
+                      "category": "카테고리",
+                      "description": "설명",
+                      "latitude": 37.123,
+                      "longitude": 127.123
+                    }
+                  ],
+                  "attractions": [
+                    {
+                      "placeId": 456,
+                      "name": "장소명",
+                      "type": "ATTRACTION",
+                      "category": "카테고리",
+                      "description": "설명",
+                      "latitude": 37.123,
+                      "longitude": 127.123
+                    }
+                  ]
                 }
               ],
-              "summary": ""
+              "summary": "전체 여행 경로 요약"
             }
             """;
 
@@ -138,7 +160,9 @@ public class AiService {
                     "messages", List.of(
                             Map.of("role", "system", "content", systemPrompt),
                             Map.of("role", "user", "content", userPrompt)
-                    )
+                    ),
+                    "temperature", 0.7,
+                    "response_format", Map.of("type", "json_object")
             );
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
@@ -157,6 +181,10 @@ public class AiService {
                     @SuppressWarnings("unchecked")
                     Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
                     String content = (String) message.get("content");
+
+                    // 디버깅을 위해 GPT 응답 로깅
+                    System.out.println("GPT Response: " + content);
+
                     return JsonUtils.fromJson(content, RouteAiResultDto.class);
                 }
             }
