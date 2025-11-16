@@ -1,0 +1,155 @@
+.section {
+  width: 100%;
+  max-width: 88%;
+  margin: 50px auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.sub {
+  color: #555;
+  margin-bottom: 22px;
+}
+
+/* 파란 박스 */
+.recommendBox {
+  background: #e8f2ff;
+  padding: 26px;
+  border-radius: 16px;
+  margin-bottom: 40px;
+}
+
+.recommendHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recoIcon {
+  width: 32px;
+}
+
+.recoTitle {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.recoText {
+  color: #404040;
+  margin: 10px 0 16px;
+}
+
+/* 도시 pill */
+.cityPills {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cityPill {
+  background: white;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid #c7dffc;
+  color: #2573e8;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 카드 리스트 */
+.cardList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개 */
+  gap: 20px; /* 카드 간 간격 */
+  margin-top: 20px;
+}
+
+
+.card {
+  flex: 1 1 calc((100% - 40px) / 3);
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.cardImg {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.cardInfo {
+  padding: 14px;
+}
+
+.cardBackground {
+  flex: 1 1 calc((100% - 40px) / 3);
+  height: 256px;
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;       /* 오버레이 위치 */
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* 반투명 검정 오버레이 */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.1),
+    rgba(0,0,0,0.55)
+  );
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* 내용이 아래쪽에 고정 */
+  color: white;
+}
+
+
+/* 태그 */
+.tagWrap {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.tag {
+  background: rgba(255, 207, 0, 0.85);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6a4700;
+}
+
+/* 제목 */
+.cardTitle {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 6px 0 14px;
+}
+
+/* 아이콘 + 텍스트 */
+.cardRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #444;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.icon {
+  width: 14px;
+  opacity: 0.7;
+}

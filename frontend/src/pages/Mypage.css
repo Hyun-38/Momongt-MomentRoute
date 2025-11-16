@@ -1,0 +1,197 @@
+/* --- Mypage.jsx 전용 스타일 --- */
+
+/* 1. 페이지 레이아웃 */
+.container mypage-container {
+  padding-top: 48px;
+  padding-bottom: 64px;
+}
+
+.mypage-header {
+  margin-bottom: 32px;
+}
+
+.mypage-header__title {
+  font-size: 30px;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+  color: #0F172A;
+  line-height: 36px;
+}
+
+.mypage-header__subtitle {
+  font-size: 16px;
+  color: #475569;
+  margin: 0;
+  line-height: 24px;
+}
+
+.mypage-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 2. 공통 카드 스타일 */
+.mypage-card {
+  background: white;
+  border-radius: 16px;
+  outline: 1px solid #BAE6FD;
+  padding: 24px;
+}
+
+.mypage-card__header {
+  margin-bottom: 24px;
+}
+
+/* 프로필 정보 카드 헤더의 구분선 */
+.mypage-card__header--with-divider {
+  padding-bottom: 24px;
+  border-bottom: 1px solid #BAE6FD;
+}
+
+.mypage-card__title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #0F172A;
+  margin: 0 0 4px 0;
+}
+
+.mypage-card__subtitle {
+  font-size: 16px;
+  color: #475569;
+  margin: 0;
+}
+
+.mypage-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 3. 프로필 정보 카드 (카드 1) */
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.profile-section__avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: rgba(14, 165, 233, 0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #0EA5E9;
+  font-weight: 400;
+  flex-shrink: 0; /* 크기 고정 */
+}
+
+.info__name {
+  font-size: 16px;
+  color: #0F172A;
+  line-height: 24px;
+  font-weight: 500;
+}
+
+.info__email {
+  font-size: 14px;
+  color: #475569;
+  line-height: 20px;
+}
+
+.info__date {
+  font-size: 12px;
+  color: #475569;
+  line-height: 16px;
+  margin-top: 4px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #0F172A;
+}
+
+.form-input {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  font-size: 14px;
+  color: #475569;
+  box-sizing: border-box; /* 패딩 포함 높이 계산 */
+}
+
+.form-input:read-only {
+  /* 읽기 전용 상태일 때 */
+  background: #F8FAFC;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+
+/* 4. 카드별 버튼 스타일 */
+.mypage-card__button {
+  /* 전역 .btn 스타일을 기반으로 일부 수정 */
+  padding: 8px 16px;
+  height: 36px;
+  /* style.css의 .btn:hover 효과를 덮어씁니다. */
+  box-shadow: none;
+  transform: none;
+}
+
+.mypage-card__button:hover {
+  box-shadow: none;
+  transform: none;
+  /* 원한다면 여기에 미묘한 밝기 변화 등을 추가할 수 있습니다. */
+  /* filter: brightness(0.95); */
+}
+
+/* 프로필 수정 버튼 (파란색, 꽉 참) */
+.mypage-card__button--primary {
+  background: #0EA5E9;
+  color: white;
+  width: 100%; /* 꽉 채움 */
+}
+
+/* 비밀번호 변경 버튼 (하늘색, 왼쪽 정렬) */
+.mypage-card__button--secondary {
+  background: #F0F9FF;
+  color: #0F172A;
+  border: 1px solid #BAE6FD;
+  justify-content: flex-start; /* 텍스트 왼쪽 정렬 */
+  width: auto; /* 내용만큼 너비 */
+}
+
+/* 계정 삭제 카드 (빨간색 테두리) */
+.mypage-card--danger-outline {
+  outline: 1px solid rgba(239, 68, 68, 0.5); /* #EF4444의 50% */
+}
+
+/* 계정 삭제 텍스트 (빨간색) */
+.mypage-card__title--danger {
+  color: #EF4444;
+}
+
+/* 계정 삭제 버튼 (빨간색, 왼쪽 정렬) */
+.mypage-card__button--danger {
+  background: #EF4444;
+  color: white;
+  justify-content: flex-start; /* 텍스트 왼쪽 정렬 */
+  width: auto; /* 내용만큼 너비 */
+}

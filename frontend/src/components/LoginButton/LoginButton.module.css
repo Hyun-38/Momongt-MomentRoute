@@ -1,0 +1,24 @@
+.LoginBtn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 88px;
+    height: 32px;
+    background: linear-gradient(to right, #00A6F4, #155DFC);
+    border-radius: 10px;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
+    color: white;
+    cursor: pointer;
+}
+
+.LoginBtn:hover {
+  opacity: 0.9;
+}
+
+.loginIcon {
+  width: 16px;
+  margin-right: 6px;
+}
