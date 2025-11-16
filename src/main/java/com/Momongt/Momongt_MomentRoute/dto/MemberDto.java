@@ -15,28 +15,28 @@ public class MemberDto {
     @Schema(description = "유저 아이디", example = "1")
     private Long userId;
 
+    @Schema(description = "이메일", example = "user@example.com")
+    private String email;
+
     @Schema(description = "이름", example = "HongGilDong")
     private String name;
 
     @Schema(description = "전화번호", example = "010-1234-5678")
     private String phoneNumber;
 
-    @Schema(description = "생년월일", example = "2003-03-03")
-    private String birth;
-
-    @Schema(description = "계정 생성일시")
+    @Schema(description = "가입 일시", example = "2024-11-16T14:30:00")
     private String createdAt;
 
-    @Schema(description = "마지막 정보 수정일시")
+    @Schema(description = "마지막 정보 수정일시", example = "2024-11-16T14:30:00")
     private String updatedAt;
 
     /** Member → MemberDto 변환 */
     public static MemberDto fromEntity(Member member) {
         return MemberDto.builder()
                 .userId(member.getId())
+                .email(member.getEmail())
                 .name(member.getName())
                 .phoneNumber(member.getPhoneNumber())
-                .birth(member.getBirth())
                 .createdAt(member.getCreatedAt() != null ? member.getCreatedAt().toString() : null)
                 .updatedAt(member.getUpdatedAt() != null ? member.getUpdatedAt().toString() : null)
                 .build();
@@ -50,12 +50,19 @@ public class MemberDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema(description = "회원가입 요청 DTO")
     public static class SignUpRequest {
+        @Schema(description = "이메일", example = "user@example.com")
         private String email;
+
+        @Schema(description = "비밀번호", example = "password123")
         private String password;
+
+        @Schema(description = "이름", example = "홍길동")
         private String name;
+
+        @Schema(description = "전화번호", example = "010-1234-5678")
         private String phoneNumber;
-        private String birth;
     }
 
     @Getter
@@ -65,8 +72,14 @@ public class MemberDto {
     @AllArgsConstructor
     @Schema(description = "회원가입 응답 DTO")
     public static class SignUpResponse {
+        @Schema(description = "회원 ID")
         private Long userId;
+
+        @Schema(description = "이메일")
         private String email;
+
+        @Schema(description = "가입 일시")
+        private String createdAt;
     }
 
     /* ============================================================
@@ -127,9 +140,14 @@ public class MemberDto {
     @AllArgsConstructor
     @Schema(description = "회원 정보 수정 요청 DTO")
     public static class UpdateMemberRequest {
+        @Schema(description = "이메일")
+        private String email;
+
+        @Schema(description = "이름")
         private String name;
+
+        @Schema(description = "전화번호")
         private String phoneNumber;
-        private String birth;
     }
 
     @Getter
@@ -142,7 +160,6 @@ public class MemberDto {
         private Long userId;
         private String name;
         private String phoneNumber;
-        private String birth;
         private String email;
 
         public static UpdateMemberResponse fromEntity(Member m) {
@@ -150,7 +167,6 @@ public class MemberDto {
                     m.getId(),
                     m.getName(),
                     m.getPhoneNumber(),
-                    m.getBirth(),
                     m.getEmail()
             );
         }
@@ -193,19 +209,6 @@ public class MemberDto {
     @AllArgsConstructor
     @Schema(description = "회원 탈퇴 응답 DTO")
     public static class DeleteMemberResponse {
-        private String message;
-    }
-
-    /* ============================================================
-        공통 에러 메시지
-    ============================================================ */
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    @Schema(description = "에러 메시지 응답 DTO")
-    public static class ErrorMessageResponse {
         private String message;
     }
 }

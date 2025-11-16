@@ -21,7 +21,7 @@ public class Member {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, length = 50)
@@ -30,8 +30,6 @@ public class Member {
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
-    @Column(length = 20)
-    private String birth;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
