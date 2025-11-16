@@ -88,10 +88,22 @@ public class AiService {
                 cityPayloads
         );
 
-        // 3) GPT 호출
+        // DB에서 조회한 실제 place 데이터 로깅
+        System.out.println("=== GPT에 전달되는 Place 데이터 ===");
+        for (RouteAiPayload.RouteCityPayload cityPayload : cityPayloads) {
+            System.out.println("도시: " + cityPayload.cityName());
+            System.out.println("  총 " + cityPayload.places().size() + "개의 장소");
+            for (RouteAiPayload.RoutePlacePayload place : cityPayload.places()) {
+                System.out.println("  - [" + place.placeId() + "] " + place.name() +
+                    " (" + place.type() + ", " + place.category() + ")");
+            }
+        }
+        System.out.println("=====================================");
+
+        // 4) GPT 호출
         RouteAiResultDto gptResult = callGPT(payload);
 
-        // 4) 프론트용 응답으로 변환
+        // 5) 프론트용 응답으로 변환
         List<RouteResponseDto.CityRecommendation> cityRecommendations = gptResult.cities().stream()
                 .map(aiCity -> new RouteResponseDto.CityRecommendation(
                         aiCity.cityName(),
@@ -132,44 +144,52 @@ public class AiService {
 
         String systemPrompt = """
             You are an AI travel planner for Korea.
-            Based on the provided city and place data (in JSON format):
-            1. Recommend 2 RESTAURANT places that match the user's preferred food categories
-            2. Recommend 1 place from ATTRACTION/EXHIBITION/FESTIVAL
-            3. Create a summary of the entire travel route
             
-            IMPORTANT: You MUST use the exact placeId from the input JSON.
+            CRITICAL RULES:
+            1. You MUST ONLY recommend places from the provided JSON input data
+            2. You MUST use the EXACT placeId, name, type, category, latitude, longitude from the input
+            3. DO NOT invent or create new places
+            4. DO NOT modify place names or details
+            5. Only SELECT from the given places based on user preferences
             
-            You MUST respond ONLY with this exact JSON format (no additional text):
+            Based on the provided place data:
+            - Recommend 2 RESTAURANT places matching user's food categories
+            - Recommend 1 place from ATTRACTION/EXHIBITION/FESTIVAL types
+            - Create a summary of the travel route
+            
+            Respond ONLY with this JSON format:
             {
               "cities": [
                 {
-                  "cityName": "city name",
+                  "cityName": "city name from input",
                   "foods": [
                     {
-                      "placeId": 123,
-                      "name": "place name",
-                      "type": "RESTAURANT",
-                      "category": "category",
-                      "description": "description",
-                      "latitude": 37.123,
-                      "longitude": 127.123
+                      "placeId": <exact ID from input>,
+                      "name": "<exact name from input>",
+                      "type": "<exact type from input>",
+                      "category": "<exact category from input>",
+                      "description": "<exact description from input>",
+                      "latitude": <exact latitude from input>,
+                      "longitude": <exact longitude from input>
                     }
                   ],
                   "attractions": [
                     {
-                      "placeId": 456,
-                      "name": "place name",
-                      "type": "ATTRACTION",
-                      "category": "category",
-                      "description": "description",
-                      "latitude": 37.123,
-                      "longitude": 127.123
+                      "placeId": <exact ID from input>,
+                      "name": "<exact name from input>",
+                      "type": "<exact type from input>",
+                      "category": "<exact category from input>",
+                      "description": "<exact description from input>",
+                      "latitude": <exact latitude from input>,
+                      "longitude": <exact longitude from input>
                     }
                   ]
                 }
               ],
-              "summary": "travel route summary"
+              "summary": "Korean travel route summary"
             }
+            
+            REMEMBER: Use ONLY the places provided in the input JSON. Do NOT create new places.
             """;
 
         try {
