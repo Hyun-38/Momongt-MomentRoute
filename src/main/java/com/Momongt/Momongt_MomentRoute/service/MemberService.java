@@ -23,8 +23,6 @@ public class MemberService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
-                .phoneNumber(request.getPhoneNumber())
-                .birth(request.getBirth())
                 .role(Role.USER)
                 .build();
 

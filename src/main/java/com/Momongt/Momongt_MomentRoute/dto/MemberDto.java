@@ -15,14 +15,13 @@ public class MemberDto {
     @Schema(description = "유저 아이디", example = "1", required = true)
     private Long userId;
 
+    private String email;
+
     @Schema(description = "이름", example = "HongGilDong", required = true)
     private String name;
 
     @Schema(description = "전화번호", example = "010-1234-5678", required = true)
     private String phoneNumber;
-
-    @Schema(description = "생년월일", example = "2003-03-03")
-    private String birth;
 
     @Schema(description = "계정 생성일시")
     private String createdAt;
@@ -33,10 +32,10 @@ public class MemberDto {
     /** Member → MemberDto 변환 */
     public static MemberDto fromEntity(Member member) {
         return MemberDto.builder()
+                .email(member.getEmail())
                 .userId(member.getId())
                 .name(member.getName())
                 .phoneNumber(member.getPhoneNumber())
-                .birth(member.getBirth())
                 .createdAt(member.getCreatedAt() != null ? member.getCreatedAt().toString() : null)
                 .updatedAt(member.getUpdatedAt() != null ? member.getUpdatedAt().toString() : null)
                 .build();
