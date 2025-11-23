@@ -22,7 +22,7 @@ export default function LoginModal({ onClose, onGoSignup, onLoginSuccess }) {
       console.log("📌 로그인 요청:", requestBody);
 
       const res = await axios.post(
-        "http://momonteroute.store/api/member/login",
+        "http://momonteroute.store:8082/api/member/login",
         requestBody,
         {
           headers: {
