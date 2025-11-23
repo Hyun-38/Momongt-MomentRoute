@@ -27,7 +27,7 @@ export default function SignupModal({ onClose, onGoLogin }) {
       console.log("📌 보낼 데이터:", requestBody);
 
       const res = await axios.post(
-        "http://172.30.1.31:8080/api/member/signup",   // ⭐ 실제 엔드포인트로 수정 필요
+        "http://momonteroute.store/api/member/signup",   // ⭐ 실제 엔드포인트로 수정 필요
         requestBody,
         {
           headers: {
