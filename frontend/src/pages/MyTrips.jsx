@@ -75,7 +75,7 @@ function MyTrips() {
   useEffect(() => {
     const loadTrips = async () => {
       try {
-        const res = await axios.get("http://13.124.41.43/api/travel/list");
+        const res = await axios.get("http://192.168.0.68:8082/api/travel/list");
         console.log("🔥 GET /travel/list 응답:", res.data);
 
         const transformed = transformApiData(res.data);
